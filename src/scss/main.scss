@@ -82,32 +82,29 @@ body {
 		.messages-list {
 			position: relative;
 			bottom: 0;
-
-			.media {
-
-				.media-left,.media-right{
+			.message-item {
+				display: flex;
+				.item-face {
 					padding: 8px 5px 0;
 				}
 				img {
 					@include square(40px);
 				}
-			}
-
-			%message-style {
-				border-radius: 5px;
-				padding: 8px;
-				margin: 0 5px;
-			}
-
-			.send-message {
-				@extend %message-style;
-				float: right;
-				background-color: #9eea6a;
-			}
-			.received-message {
-				@extend %message-style;
-				float: left;
-				background-color: #fff;
+				.item-content{
+						border-radius: 5px;
+						padding: 8px;
+						margin: 0 5px;
+						background-color: #fff;
+					}
+				&.send{
+					flex-direction:row-reverse;
+					.item-content{
+						background-color: #9eea6a;
+					}
+				}
+				&+.message-item {
+					margin-top: 15px;
+				}
 			}
 		}
 	}

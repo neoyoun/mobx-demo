@@ -9,14 +9,18 @@ import DevTools from 'mobx-react-devtools';
 class App extends Component {
   constructor(props){
     super(props)
-    this.props.appState.loadData();
+    console.log("data is ",Array.isArray(this.props.data))
+    console.log("slice is ",Array.isArray(this.props.data.slice()) )
+
   }
   render() {
     let appState = this.props.appState;
+    let data = this.props.data;
     let filterVisible = appState.showTypeFilter;
     let filterStyle = {display:filterVisible?'':'none'}
     return (
       <div className='main-container' onClick={this.hideTypeFilter}>
+      <DevTools />
         <nav className = "navbar-fixed-top panel-info text-center">
           <div className ="panel-heading">{appState.pageTitle}</div>
           <span className="filter-btn text-success" onClick={this.toggleTypeFilter}>筛选</span>
@@ -26,12 +30,12 @@ class App extends Component {
           <li className="type-item" value="10" onClick={this.setVisibleType}>仅看求购</li>
           <li className="type-item" value="20" onClick={this.setVisibleType}>仅看求售</li>
         </ul>
-        <MessageList messages={appState.showingMessages} userMobile={appState.userMobile}/>
+        <div className="messages-list-box">
+        <MessageList messages={data.slice()} userMobile={appState.userMobile}/>
+        </div>
         {/*<button onClick={this.onReset}>
           Seconds passed: {this.props.appState.timer}
         </button>*/}
-        
-        {/*<DevTools />*/}
       </div>
     );
   }
@@ -60,22 +64,21 @@ class MessageList extends Component {
     let {messages,userMobile} = this.props;
     return (
       <div className="messages-list" id="messagesList">
-       {/* {messages.map((message)=>{
+       {messages.map((message)=>{
           if(message.mobile == userMobile){
             return <MessageItem message={message} key={message.id} source="send"/>
           }else{
             return <MessageItem message={message} key={message.id} source="received"/>
           }
-          })}*/}
+          })}
       </div>
     )
   }
 }
 class MessageItem extends Component {
   render() {
-    let {source,message} = this.props.source;
-    let faceSrc = './imgs/'+ message.type +'.png';
-    let imgClassName = source=="send"?"media-right":"media-left";
+    let {source,message} = this.props;
+    let faceSrc = '/src/imgs/'+ message.typename +'.png';
     return (
         <div className={"message-item "+ source}>
           <div className="item-face">

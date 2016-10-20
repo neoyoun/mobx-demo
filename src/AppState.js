@@ -5,14 +5,8 @@ class AppState {
   @observable showTypeFilter=false;
   @observable messageType = 0;
   @observable userMobile = '18664623402';
-  data = [];
-  @observable showingMessages=[];
-  @observable pageTitle = '实时交易信息';
   constructor() {
     autorun(()=>this.filterShowMessage)
-  }
-  loadData() {
-    this.data = mockData;
   }
   toggleTypeFilter() {
     this.showTypeFilter = !this.showTypeFilter;
@@ -24,29 +18,19 @@ class AppState {
   }
   setVisibleType(type) {
     this.messageType = type;
-    switch(type){
-      case 0:
-        this.pageTitle = '实时交易信息';
-      break;
-      case 10:
-        this.pageTitle = '实时求购信息';
-      break;
-      case 20:
-        this.pageTitle = '实时出售信息';
-      break;
+  }
+  @computed get pageTitle() {
+    switch(this.messageType) {
+      case 0: return '实时交易信息'
+      case 10: return '实时求购信息'
+      case 20: return '实时出售信息'
     }
   }
-  filterShowMessage() {
-    let showMessages = this.data.filter((message)=>{
-      if(this.messageType != 0){
-        return message.type ==this.messageType
-      }else{
-        return message
-      }
-    })
-    this.showingMessages[0]=showMessages[0];
-  }
 }
+const data = observable([])
+mockData.forEach(message =>{
+  data.push(message)
+})
 const appState = new AppState();
 
-export {appState};
+export {appState,data};
