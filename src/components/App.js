@@ -281,7 +281,7 @@ class MessagesList extends Component {
 			}
 		})
 		return (
-			<div className="messages-list" id="messagesList" onClick={this.testPubHandle} ref="messagesList">
+			<div className="messages-list" id="messagesList" ref="messagesList">
 				{messageList}
 			</div>
 			)

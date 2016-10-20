@@ -7,14 +7,26 @@ import DevTools from 'mobx-react-devtools';
 
 @observer
 class App extends Component {
+  constructor(props){
+    super(props)
+    this.props.appState.loadData();
+  }
   render() {
+    let appState = this.props.appState;
+    let filterVisible = appState.showTypeFilter;
+    let filterStyle = {display:filterVisible?'':'none'}
     return (
-      <div className='main-container'>
+      <div className='main-container' onClick={this.hideTypeFilter}>
         <nav className = "navbar-fixed-top panel-info text-center">
-          <div className ="panel-heading">{this.props.appState.curTitle}</div>
-          <span value="20" className="filter-btn" onClick={this.toggleShowFilter}>筛选</span>
+          <div className ="panel-heading">{appState.pageTitle}</div>
+          <span className="filter-btn text-success" onClick={this.toggleTypeFilter}>筛选</span>
         </nav>
-        <MessageTypeFilter isVisible={this.props.appState.showTypeFilter}/>
+        <ul className="list-unstyled types-list" style={filterStyle} value={filterVisible}>
+          <li className="type-item" value="0" onClick={this.setVisibleType}>全部</li>
+          <li className="type-item" value="10" onClick={this.setVisibleType}>仅看求购</li>
+          <li className="type-item" value="20" onClick={this.setVisibleType}>仅看求售</li>
+        </ul>
+        <MessageList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         {/*<button onClick={this.onReset}>
           Seconds passed: {this.props.appState.timer}
         </button>*/}
@@ -26,24 +38,56 @@ class App extends Component {
   onReset = () => {
     this.props.appState.resetTimer();
   }
-  toggleShowFilter = () => {
-    this.props.appState.toggleShowFilter();
+  componentWillUpdate() {
+    console.log('will update....');
+  }
+  toggleTypeFilter = (e) => {
+    e.stopPropagation()
+    this.props.appState.toggleTypeFilter();
+  }
+  hideTypeFilter = () =>{
+    this.props.appState.hideTypeFilter()
+  }
+  setVisibleType = (e) =>{
+    //e.stopPropagation()
+    this.props.appState.setVisibleType(e.target.value)
   }
 };
 
-class MessageTypeFilter extends Component {
+@observer 
+class MessageList extends Component {
   render() {
-    let isVisible = this.props.isVisible;
-    let style = {
-      display:isVisible?'':'none'
-    }
+    let {messages,userMobile} = this.props;
     return (
-        <ul className="list-unstyled types-list" style={style}>
-          <li className="type-item" value="0" onClick={this.filterTypeHandle}>全部</li>
-          <li className="type-item" value="10" onClick={this.filterTypeHandle}>仅看求购</li>
-          <li className="type-item" value="20" onClick={this.filterTypeHandle}>仅看求售</li>
-        </ul>
+      <div className="messages-list" id="messagesList">
+       {/* {messages.map((message)=>{
+          if(message.mobile == userMobile){
+            return <MessageItem message={message} key={message.id} source="send"/>
+          }else{
+            return <MessageItem message={message} key={message.id} source="received"/>
+          }
+          })}*/}
+      </div>
+    )
+  }
+}
+class MessageItem extends Component {
+  render() {
+    let {source,message} = this.props.source;
+    let faceSrc = './imgs/'+ message.type +'.png';
+    let imgClassName = source=="send"?"media-right":"media-left";
+    return (
+        <div className={"message-item "+ source}>
+          <div className="item-face">
+            <img src={faceSrc}/>
+          </div>
+          <div className="item-content">
+            <h4 className="media-heading">{message.mobile}<small>&nbsp;&nbsp;@{message.addtime}</small></h4>
+            <div className="message-content">{message.content}</div>
+          </div>
+        </div>
       )
+
   }
 }
 
