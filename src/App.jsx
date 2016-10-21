@@ -3,35 +3,37 @@ require('./scss/main.scss');
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
+import LoadingMask from 'components/LoadingMask';
 //import MessageTypeFilter from 'components/MessageTypeFilter';
-
+import MessagesList from 'components/MessagesList';
 @observer
 class App extends Component {
   constructor(props){
     super(props)
-    console.log("data is ",Array.isArray(this.props.data))
-    console.log("slice is ",Array.isArray(this.props.data.slice()) )
-
+    //this.props.appState.fetch();
   }
   render() {
     let appState = this.props.appState;
-    let data = this.props.data;
-    let filterVisible = appState.showTypeFilter;
-    let filterStyle = {display:filterVisible?'':'none'}
+    let isVisible = appState.showTypeFilter;
+    let filterStyle = {
+      display:isVisible?'':'none'
+    }
     return (
       <div className='main-container' onClick={this.hideTypeFilter}>
       <DevTools />
+        <LoadingMask/>
         <nav className = "navbar-fixed-top panel-info text-center">
           <div className ="panel-heading">{appState.pageTitle}</div>
-          <span className="filter-btn text-success" onClick={this.toggleTypeFilter}>筛选</span>
+          <span className="filter-btn text-success" onClick={(e)=>appState.toggleTypeFilter(e)}>筛选</span>
         </nav>
-        <ul className="list-unstyled types-list" style={filterStyle} value={filterVisible}>
-          <li className="type-item" value="0" onClick={this.setVisibleType}>全部</li>
-          <li className="type-item" value="10" onClick={this.setVisibleType}>仅看求购</li>
-          <li className="type-item" value="20" onClick={this.setVisibleType}>仅看求售</li>
-        </ul>
+        {/*<ul className="list-unstyled types-list" style={filterStyle}>
+          <li className="type-item" onClick={()=>appState.setVisibleType(0)}>全部</li>
+          <li className="type-item" onClick={()=>appState.setVisibleType(10)}>仅看求购</li>
+          <li className="type-item" onClick={()=>appState.setVisibleType(20)}>仅看求售</li>
+        </ul>*/}
+        <MessageTypeFilter appState={appState}/>
         <div className="messages-list-box">
-        <MessageList messages={data.slice()} userMobile={appState.userMobile}/>
+        <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         </div>
         {/*<button onClick={this.onReset}>
           Seconds passed: {this.props.appState.timer}
@@ -39,59 +41,34 @@ class App extends Component {
       </div>
     );
   }
-  onReset = () => {
-    this.props.appState.resetTimer();
+  hideTypeFilter = (e) => {
+    let isVisible = this.props.appState.showTypeFilter;
+    if(isVisible) {
+      this.props.appState.hideTypeFilter();
+    }
   }
-  componentWillUpdate() {
-    console.log('will update....');
-  }
-  toggleTypeFilter = (e) => {
-    e.stopPropagation()
-    this.props.appState.toggleTypeFilter();
-  }
-  hideTypeFilter = () =>{
-    this.props.appState.hideTypeFilter()
-  }
-  setVisibleType = (e) =>{
+  setType = (e) =>{
     //e.stopPropagation()
     this.props.appState.setVisibleType(e.target.value)
   }
 };
 
-@observer 
-class MessageList extends Component {
+class MessageTypeFilter extends Component {
   render() {
-    let {messages,userMobile} = this.props;
+    let appState = this.props.appState;
+    let isVisible = appState.showTypeFilter;
+    let filterStyle = {
+      display:isVisible?'':'none'
+    }
     return (
-      <div className="messages-list" id="messagesList">
-       {messages.map((message)=>{
-          if(message.mobile == userMobile){
-            return <MessageItem message={message} key={message.id} source="send"/>
-          }else{
-            return <MessageItem message={message} key={message.id} source="received"/>
-          }
-          })}
-      </div>
-    )
-  }
-}
-class MessageItem extends Component {
-  render() {
-    let {source,message} = this.props;
-    let faceSrc = '/src/imgs/'+ message.typename +'.png';
-    return (
-        <div className={"message-item "+ source}>
-          <div className="item-face">
-            <img src={faceSrc}/>
-          </div>
-          <div className="item-content">
-            <h4 className="media-heading">{message.mobile}<small>&nbsp;&nbsp;@{message.addtime}</small></h4>
-            <div className="message-content">{message.content}</div>
-          </div>
-        </div>
+      <ul className="list-unstyled types-list" style={filterStyle}>
+          <li className="type-item" value="0" onClick={()=>appState.setVisibleType(0)}>全部</li>
+          <li className="type-item" value="10" onClick={()=>appState.setVisibleType(10)}>仅看求购</li>
+          <li className="type-item" value="20" onClick={()=>appState.setVisibleType(20)}>仅看求售</li>
+      </ul>
       )
-
   }
+
 }
 
 export default App;
