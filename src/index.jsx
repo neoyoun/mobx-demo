@@ -1,10 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import {appState} from './AppState';
+import AppState from './AppState';
 import App from './App';
 
-
+//window.appState = appState;
+const appState = new AppState();
 render(
   <AppContainer>
     <App appState={appState}/>
@@ -18,7 +19,7 @@ if (module.hot) {
 
     render(
       <AppContainer>
-        <NextApp appState={appState} />
+        <NextApp appState={appState}/>
       </AppContainer>,
       document.getElementById('root')
     );

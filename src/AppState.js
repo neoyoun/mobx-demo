@@ -1,5 +1,4 @@
-import { observe,observable,extendObservable,computed,autorun,action } from 'mobx';
-import mockData from './api/data.json';
+import { observable,computed,autorun,action } from 'mobx';
 class AppState {
   @observable showTypeFilter=false;
   @observable messageType = 0;
@@ -10,15 +9,17 @@ class AppState {
   constructor() {
     this.initialLoad()
   }
-  @action initialLoad() {
+  @action('initial load data')
+  initialLoad() {
     let dataUrl = `http://xaljbbs.com/dist/services/loaddata.php?amount=${this.firstLoad}`;
+    let mockUrl = '/src/api/data.json';
     let getDataReq = new Request(dataUrl,{method:'GET',mode:'cors'})
     window.fetch(getDataReq)
     .then(res => res.json())
-    .then(action(json =>{
-      this.data = json.messages
+    .then(action(json => {
+      this.data = json.messages;
     }))
-    .catch(e => console.log('fetch error'+e))
+    .catch(e => console.error('fetch error'+e))
   }
   @action toggleTypeFilter(e) {
     e.stopPropagation()
@@ -30,13 +31,11 @@ class AppState {
     }
   }
   @action setVisibleType(type) {
-    console.log('set setVisibleType')
     if(type != this.messageType){
      this.messageType = type; 
    }
   }
   @computed get pageTitle() {
-    console.log('get pageTitle')
     switch(this.messageType) {
       case 0: return '实时交易信息'
       case 10: return '实时求购信息'
@@ -44,7 +43,6 @@ class AppState {
     }
   }
   @computed get showingMessages() {
-    console.log('get showingMessages')
     if(this.messageType == 0){
       return this.data
     }else{
@@ -52,10 +50,6 @@ class AppState {
     }
   }
 }
-/*const data = observable([])
-mockData.forEach(message =>{
-  data.push(message)
-})*/
-const appState = new AppState();
 
-export {appState};
+
+export default AppState;

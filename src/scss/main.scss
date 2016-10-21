@@ -3,7 +3,14 @@ html{
 	height: 100%;
 	overflow: hidden;
 }
+%mobileSize {
+	width: 100%;
+	min-width: 320px;
+	max-width: 640px;
+	margin: 0 auto;
+}
 body {
+	@extend %mobileSize;
 		height: 100%;
 		padding-top: 40px;
 		padding-bottom: 40px;
@@ -16,6 +23,14 @@ body {
 	border-color: transparent;
 	height: 100%;
 	overflow: hidden;
+
+ @at-root .page-title {
+ 	@extend %mobileSize;
+ 	position: fixed;
+ 	top: 0;
+ 	z-index: 1;
+ 	text-align: center;
+ }
 
 	.loading-mask {
 		position: fixed;
@@ -36,6 +51,7 @@ body {
 			text-align: center;
 		}
 	}
+
 	.filter-btn{
 		position: absolute;
 		top: 0;
@@ -43,38 +59,80 @@ body {
 		padding: 10px;
 		cursor: pointer;
 	}
-	.types-list{
+	%type-list {
 		position: absolute;
-		z-index: 1;
+		z-index: 2;
 		list-style: none;
-		right: 0;
-		text-align: center;
 		width: 7em;
 		padding: .5em 0;
 		line-height: 1.5;
 		background-color: #333;
 		color: #fff;
-
-		&>li{
+		text-align: center;
+		&>li {
 			cursor: pointer;
 		}
-	}
 
-	.show-box-btn {
-		cursor: pointer;
+	}
+	.types-list{
+		@extend %type-list;
+		right: 0;
 	}
 	.new-message-box {
-		@extend %absoluteCenter;
 		position: fixed;
 		bottom: 0;
+		height: 40px;
+		overflow: hidden;
+		@extend %mobileSize;
 
-		&.show {
-			opacity: 1;
-			transform:rotateY(0);
-			top: 30%;
+		&.up {
+			.message-input{
+				transform:translateY(-100%)
+			}
 		}
 
+		.message-input {
+			display: flex;
+			padding: 3px 0;
+			transition:all .5s;
+
+			input {
+				border: 1px solid #aaa;
+				border-radius: 0;
+				margin-right: .5em;
+
+				&:active,&:focus {
+					box-shadow: none;
+				}
+			}
+			button {
+				border-radius: 0;
+			}
+
+			.input-type {
+				flex:1 0 5em;
+				text-align: center;
+				line-height: 32px;
+				background-color: #eee;
+				border:1px solid #ccc;
+			}
+			.input-button {
+				flex:1 0 5em;
+			}
+		}
+
+		.send-type-list{
+			transform:translateY(-100%);
+			width: 5em;
+			@extend %type-list;
+			display: none;
+			&.on {
+				display: block;
+			}
+		}
 	}
+
+
 
 	@at-root .messages-list-box {
 		@extend %overlay;

@@ -3,9 +3,11 @@ require('./scss/main.scss');
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
+import {addMessageState} from './AppState';
 import LoadingMask from 'components/LoadingMask';
-//import MessageTypeFilter from 'components/MessageTypeFilter';
+import MessageTypeFilter from 'components/MessageTypeFilter';
 import MessagesList from 'components/MessagesList';
+import AddMessage from 'components/AddMessage';
 @observer
 class App extends Component {
   constructor(props){
@@ -22,19 +24,15 @@ class App extends Component {
       <div className='main-container' onClick={this.hideTypeFilter}>
       <DevTools />
         <LoadingMask/>
-        <nav className = "navbar-fixed-top panel-info text-center">
+        <nav className = "page-title panel-info">
           <div className ="panel-heading">{appState.pageTitle}</div>
           <span className="filter-btn text-success" onClick={(e)=>appState.toggleTypeFilter(e)}>筛选</span>
         </nav>
-        {/*<ul className="list-unstyled types-list" style={filterStyle}>
-          <li className="type-item" onClick={()=>appState.setVisibleType(0)}>全部</li>
-          <li className="type-item" onClick={()=>appState.setVisibleType(10)}>仅看求购</li>
-          <li className="type-item" onClick={()=>appState.setVisibleType(20)}>仅看求售</li>
-        </ul>*/}
         <MessageTypeFilter appState={appState}/>
         <div className="messages-list-box">
         <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         </div>
+        <AddMessage/>
         {/*<button onClick={this.onReset}>
           Seconds passed: {this.props.appState.timer}
         </button>*/}
@@ -52,7 +50,7 @@ class App extends Component {
     this.props.appState.setVisibleType(e.target.value)
   }
 };
-
+/*@observer
 class MessageTypeFilter extends Component {
   render() {
     let appState = this.props.appState;
@@ -68,7 +66,6 @@ class MessageTypeFilter extends Component {
       </ul>
       )
   }
-
-}
+}*/
 
 export default App;
