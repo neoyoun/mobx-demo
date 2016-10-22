@@ -6,6 +6,7 @@ import App from './App';
 
 //window.appState = appState;
 const appState = new AppState();
+window.appState = appState;
 render(
   <AppContainer>
     <App appState={appState}/>

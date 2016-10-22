@@ -4,22 +4,34 @@ class AppState {
   @observable messageType = 0;
   @observable userMobile = '18664623402';
   @observable loading = true;
+  @observable loadTimes = 0;
   @observable data = [];
-  firstLoad = 50;
+  @observable hasHistoryMessage = true;
+  @observable leastId = 0;
+  firstLoadMount = 50;
+  dataUrl = `http://xaljbbs.com/dist/services/loaddata.php?amount=${this.firstLoadMount}`;
+  listeningDataUrl = 'http://xaljbbs.com/dist/services/loaddata.php?leastId=';
   constructor() {
     this.initialLoad()
   }
   @action('initial load data')
   initialLoad() {
-    let dataUrl = `http://xaljbbs.com/dist/services/loaddata.php?amount=${this.firstLoad}`;
-    let mockUrl = '/src/api/data.json';
-    let getDataReq = new Request(dataUrl,{method:'GET',mode:'cors'})
+    let getDataReq = new Request(this.dataUrl,{method:'GET',mode:'cors'})
     window.fetch(getDataReq)
     .then(res => res.json())
     .then(action(json => {
       this.data = json.messages;
+      this.leastId = json.leastId;
+      this.userMobile = json.userMobile || this.userMobile;
+      if(json.length < this.firstLoadMount){
+        this.hasHistoryMessage = false;
+      }
     }))
     .catch(e => console.error('fetch error'+e))
+  }
+  @action('listening new messages')
+  listeningData() {
+
   }
   @action toggleTypeFilter(e) {
     e.stopPropagation()
@@ -34,6 +46,12 @@ class AppState {
     if(type != this.messageType){
      this.messageType = type; 
    }
+  }
+  @action scrollMessageBox() {
+
+  }
+  @computed get totalHeight() {
+    return this.rollBox.scrollHeight;
   }
   @computed get pageTitle() {
     switch(this.messageType) {

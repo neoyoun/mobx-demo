@@ -3,7 +3,6 @@ require('./scss/main.scss');
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
-import {addMessageState} from './AppState';
 import LoadingMask from 'components/LoadingMask';
 import MessageTypeFilter from 'components/MessageTypeFilter';
 import MessagesList from 'components/MessagesList';
@@ -12,7 +11,6 @@ import AddMessage from 'components/AddMessage';
 class App extends Component {
   constructor(props){
     super(props)
-    //this.props.appState.fetch();
   }
   render() {
     let appState = this.props.appState;
@@ -29,16 +27,52 @@ class App extends Component {
           <span className="filter-btn text-success" onClick={(e)=>appState.toggleTypeFilter(e)}>筛选</span>
         </nav>
         <MessageTypeFilter appState={appState}/>
-        <div className="messages-list-box">
+        <div className="messages-list-box" ref="messageBox">
         <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         </div>
-        <AddMessage/>
+       <AddMessage/>
         {/*<button onClick={this.onReset}>
           Seconds passed: {this.props.appState.timer}
         </button>*/}
       </div>
     );
   }
+  componentDidMount() {
+    let messageBox = this.refs.messageBox;
+    let appState = this.props.appState;
+    appState.rollBox = messageBox;
+  }
+  componentDidUpdate() {
+    let messageBox = this.refs.messageBox;
+    console.log(messageBox.scrollHeight);
+    let appState = this.props.appState;
+    if( appState.loadTimes == 0 ){
+      this.scrollMessageBox(0,500);
+    }else{
+      this.scrollMessageBox(appState.totalHeight);
+    }
+  }
+  scrollMessageBox(totalHeight,interval) {
+    let messageBox = this.refs.messageBox;
+      if( messageBox.offsetHeight < messageBox.scrollHeight ){
+        let curTop = messageBox.scrollTop,D = messageBox.scrollHeight - totalHeight;
+        if( interval != undefined ){
+          let startT = new Date().getTime(),T = interval;
+          requestAnimationFrame(function step() {
+            let movingT = new Date().getTime() - startT;
+            messageBox.scrollTop = curTop + (movingT/T * D);
+            if(movingT < T ){
+              requestAnimationFrame(step)
+            }
+          })
+        } else {
+          messageBox.scrollTop = curTop + D;
+        }
+      }else {
+        return
+      }
+  }
+  
   hideTypeFilter = (e) => {
     let isVisible = this.props.appState.showTypeFilter;
     if(isVisible) {
@@ -50,22 +84,5 @@ class App extends Component {
     this.props.appState.setVisibleType(e.target.value)
   }
 };
-/*@observer
-class MessageTypeFilter extends Component {
-  render() {
-    let appState = this.props.appState;
-    let isVisible = appState.showTypeFilter;
-    let filterStyle = {
-      display:isVisible?'':'none'
-    }
-    return (
-      <ul className="list-unstyled types-list" style={filterStyle}>
-          <li className="type-item" value="0" onClick={()=>appState.setVisibleType(0)}>全部</li>
-          <li className="type-item" value="10" onClick={()=>appState.setVisibleType(10)}>仅看求购</li>
-          <li className="type-item" value="20" onClick={()=>appState.setVisibleType(20)}>仅看求售</li>
-      </ul>
-      )
-  }
-}*/
 
 export default App;

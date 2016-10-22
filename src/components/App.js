@@ -190,7 +190,7 @@ export default class App extends Component {
 					messageBox.scrollTop = curTop + D;
 				}
 			}else {
-					return
+				return
 			}
 	}
 	listWheelHandle(event) {

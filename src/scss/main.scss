@@ -82,11 +82,13 @@ body {
 		position: fixed;
 		bottom: 0;
 		height: 40px;
-		overflow: hidden;
 		@extend %mobileSize;
 
 		&.up {
-			.message-input{
+			.message-input:nth-child(1){
+				transform:translateY(-100%) rotateX(90deg);
+			}
+			.message-input:nth-child(2){
 				transform:translateY(-100%)
 			}
 		}
@@ -115,25 +117,37 @@ body {
 				line-height: 32px;
 				background-color: #eee;
 				border:1px solid #ccc;
+				cursor: pointer;
 			}
 			.input-button {
 				flex:1 0 5em;
+			}
+			&.tip{
+				&::after{
+					content: attr(data-error);
+					color: #f43;
+					position: absolute;
+					right: 6em;
+					margin-top: -1em;
+				}
 			}
 		}
 
 		.send-type-list{
 			transform:translateY(-100%);
-			width: 5em;
 			@extend %type-list;
+			padding-top: 0;
 			display: none;
-			&.on {
+			&.active {
 				display: block;
+			}
+			.user-mobile {
+				background-color: #ccc;
+				color: #333;
+				line-height: 2;
 			}
 		}
 	}
-
-
-
 	@at-root .messages-list-box {
 		@extend %overlay;
 		overflow: auto;
