@@ -7,10 +7,10 @@ let BowerWebpackPlugin = require('bower-webpack-plugin');
 module.exports = {
 	entry: ['webpack-dev-server/client?http://127.0.0.1:8080',
     'webpack/hot/only-dev-server',
-	 './index.js'],
+	 srcPath+'/index.jsx'],
 	output: {
-		filename: 'main.js',
-		path: './dev/js',
+		filename: 'bundle.js',
+		path: path.join(__dirname, 'dev'),
 		publicPath:'/'
 	},
 	cache: true,
