@@ -1,7 +1,6 @@
 import React,{Component} from 'react'
 import { observer } from 'mobx-react';
 import AddMessageState from '../AddMessageState';
-import AppState from '../AppState';
 @observer
 class AddMessage extends Component {
 	constructor(){

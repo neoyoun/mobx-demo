@@ -21,19 +21,16 @@ class App extends Component {
     return (
       <div className='main-container' onClick={this.hideTypeFilter}>
       <DevTools />
-        <LoadingMask/>
+        <LoadingMask isVisible={appState.loading}/>
         <nav className = "page-title panel-info">
           <div className ="panel-heading">{appState.pageTitle}</div>
           <span className="filter-btn text-success" onClick={(e)=>appState.toggleTypeFilter(e)}>筛选</span>
         </nav>
         <MessageTypeFilter appState={appState}/>
-        <div className="messages-list-box" ref="messageBox">
+        <div className="messages-list-box" ref="messageBox" onTouchEnd={this.onTouchEndHandle} onWheel={this.onMessagesBoxWheel}>
         <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         </div>
        <AddMessage/>
-        {/*<button onClick={this.onReset}>
-          Seconds passed: {this.props.appState.timer}
-        </button>*/}
       </div>
     );
   }
@@ -41,47 +38,29 @@ class App extends Component {
     let messageBox = this.refs.messageBox;
     let appState = this.props.appState;
     appState.rollBox = messageBox;
+    appState.initialLoad();
+    //监听消息 最后做
+    /*setTimeout(function () {
+      appState.listeningData()
+    }, 500)*/
   }
   componentDidUpdate() {
-    let messageBox = this.refs.messageBox;
-    console.log(messageBox.scrollHeight);
-    let appState = this.props.appState;
-    if( appState.loadTimes == 0 ){
-      this.scrollMessageBox(0,500);
-    }else{
-      this.scrollMessageBox(appState.totalHeight);
-    }
+    this.props.appState.scrollMessageBox()
   }
-  scrollMessageBox(totalHeight,interval) {
-    let messageBox = this.refs.messageBox;
-      if( messageBox.offsetHeight < messageBox.scrollHeight ){
-        let curTop = messageBox.scrollTop,D = messageBox.scrollHeight - totalHeight;
-        if( interval != undefined ){
-          let startT = new Date().getTime(),T = interval;
-          requestAnimationFrame(function step() {
-            let movingT = new Date().getTime() - startT;
-            messageBox.scrollTop = curTop + (movingT/T * D);
-            if(movingT < T ){
-              requestAnimationFrame(step)
-            }
-          })
-        } else {
-          messageBox.scrollTop = curTop + D;
-        }
-      }else {
-        return
-      }
-  }
-  
   hideTypeFilter = (e) => {
     let isVisible = this.props.appState.showTypeFilter;
     if(isVisible) {
       this.props.appState.hideTypeFilter();
     }
   }
-  setType = (e) =>{
-    //e.stopPropagation()
+  setType = (e) => {
     this.props.appState.setVisibleType(e.target.value)
+  }
+  onMessagesBoxWheel = (e) => {
+    this.props.appState.onMessagesBoxWheel(e)
+  }
+  onTouchEndHandle = (e) => {
+    this.props.appState.onMessagesBoxWheel(e)
   }
 };
 

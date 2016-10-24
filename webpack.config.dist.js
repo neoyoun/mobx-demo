@@ -1,12 +1,12 @@
 'usr strict';
 let webpack = require('webpack');
 let path = require('path');
-let srcPath = path.resolve(__dirname,'./src');
+let srcPath = path.resolve(__dirname,'./src-dist');
 module.exports = {
-	entry: './index.js',
+	entry: srcPath+'/index.jsx',
 	output: {
-		path: '/',
-		filename: 'main.js',
+		path: path.join(__dirname, 'dist'),
+		filename: 'bundle.js',
 	},
 	cache: false,
 	module: {
@@ -39,15 +39,24 @@ module.exports = {
 	    },
 			]
 		},
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+    alias:{
+      'components':`${srcPath}/components`,
+      'actions':`${srcPath}/actions`,
+      'datas':`${srcPath}/datas`,
+      'imgs':`${srcPath}/imgs`
+    }
+  },
 		plugins: [
-			new webpack.DefinePlugin({
+			/*new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
-    	}),
-			new webpack.optimize.UglifyJsPlugin({
+    	}),*/
+			/*new webpack.optimize.UglifyJsPlugin({
 				compress:{
 					warnings:false
 				}
 			}),
-	    new webpack.NoErrorsPlugin()
+	    new webpack.NoErrorsPlugin()*/
 		]
 }
