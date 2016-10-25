@@ -13,6 +13,7 @@ class App extends Component {
     super(props)
   }
   render() {
+    console.log('rendering app component..')
     let appState = this.props.appState;
     let isVisible = appState.showTypeFilter;
     let filterStyle = {
@@ -30,7 +31,7 @@ class App extends Component {
         <div className="messages-list-box" ref="messageBox" onTouchEnd={this.onTouchEndHandle} onWheel={this.onMessagesBoxWheel}>
         <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         </div>
-       <AddMessage/>
+       <AddMessage currMobile={appState.userMobile}/>
       </div>
     );
   }
@@ -39,10 +40,6 @@ class App extends Component {
     let appState = this.props.appState;
     appState.rollBox = messageBox;
     appState.initialLoad();
-    //监听消息 最后做
-    /*setTimeout(function () {
-      appState.listeningData()
-    }, 500)*/
   }
   componentDidUpdate() {
     this.props.appState.scrollMessageBox()

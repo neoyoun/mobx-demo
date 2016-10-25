@@ -21,7 +21,10 @@ class AddMessageState {
       case 20: return '出售';
     }
   }
-  @action checkMobile() {
+  @action checkMobile(value) {
+      if(value){
+        this.mobile = value
+      }
       if(!this.validateMobile){
         alert('请正确输入手机号码')
       }
@@ -39,7 +42,8 @@ class AddMessageState {
     this.type = type;
     this.showTypeList = false;
   }
-  @action onAddNewOne(){
+  @action('add message to database') 
+  onAddNewOne(){
     if(! (this.validateMobile && this.validateContent)){
       alert('输入内容不能少于5个字')
       return false;
@@ -65,9 +69,15 @@ class AddMessageState {
       })
       .catch(err=>console.error(`fetch fail:${err}`))
      this.content = '';
+     this.rememberUser()
   }
-  /*@computed set setMessageType(e){
-    this.type = e.target.
-  }*/
+  @action('set user mobile to cookie')
+  rememberUser() {
+    let userMobile = this.mobile;
+    let exp = new Date();
+    let expiresTimeStamp = 60*1000*60;
+    exp.setTime(exp.getTime() + expiresTimeStamp*24);
+    document.cookie = `userMobile=${this.mobile};path=/;expires=${exp.toGMTString()}`;
+  }
 }
 export default AddMessageState;

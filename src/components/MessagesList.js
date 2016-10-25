@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 @observer
 class MessagesList extends Component {
   render() {
-    console.log('rendering MessageList..');
     let {messages,userMobile} = this.props;
     return (
       <div className="messages-list" id="messagesList">
@@ -22,7 +21,7 @@ class MessagesList extends Component {
 class MessageItem extends Component {
   render() {
     let {source,message} = this.props;
-    let faceSrc = '/src/imgs/'+ message.typename +'.png';
+    let faceSrc = './imgs/'+ message.typename +'.png';
     return (
         <div className={"message-item "+ source}>
           <div className="item-face">
