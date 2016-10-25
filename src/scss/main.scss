@@ -83,6 +83,20 @@ body {
 		@extend %type-list;
 		right: 0;
 	}
+	.unread-tips{
+		position: absolute;
+		z-index: 1;
+		cursor: pointer;
+		bottom: 2px;
+		right: 2em;
+		background-color: #fff;
+		border-radius: 10px;
+		padding: 6px 12px;
+		display: none;
+		&.on{
+			display: block;
+		}
+	}
 	.new-message-box {
 		position: fixed;
 		bottom: 0;

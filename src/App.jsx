@@ -19,6 +19,8 @@ class App extends Component {
     let filterStyle = {
       display:isVisible?'':'none'
     }
+    let unReadTips = appState.hasUnread;
+        unReadTips = unReadTips?' on':'';
     return (
       <div className='main-container' onClick={this.hideTypeFilter}>
       <DevTools />
@@ -31,7 +33,8 @@ class App extends Component {
         <div className="messages-list-box" ref="messageBox" onTouchEnd={this.onTouchEndHandle} onWheel={this.onMessagesBoxWheel}>
         <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         </div>
-       <AddMessage/>
+        <div className={"unread-tips text-success"+unReadTips} onClick={this.rollToBottom}>有新消息</div>
+        <AddMessage/>
       </div>
     );
   }
@@ -42,8 +45,7 @@ class App extends Component {
     appState.initialLoad();
   }
   componentDidUpdate() {
-    console.log('will update...')
-    this.props.appState.scrollMessageBox()
+    this.props.appState.scrollMessageBox();
   }
   hideTypeFilter = (e) => {
     let isVisible = this.props.appState.showTypeFilter;
@@ -59,6 +61,10 @@ class App extends Component {
   }
   onTouchEndHandle = (e) => {
     this.props.appState.onMessagesBoxWheel(e)
+  }
+  rollToBottom = (e) => {
+    e.stopPropagation();
+    this.props.appState.rollToBottom()
   }
 };
 

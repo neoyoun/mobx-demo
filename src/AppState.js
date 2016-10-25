@@ -4,12 +4,13 @@ class AppState {
   @observable showTypeFilter=false;
   @observable messageType = 0;
   @observable userMobile = '';
-  @observable loading = false;
+  @observable loading = true;
   @observable loadTimes = 0;
   @observable data = [];
   @observable hasHistoryMessage = true;
   @observable leastId = 0;
   @observable totalHeight =0;
+  @observable hasUnread = false;
   loadCount = 20;
   originURL = 'http://xaljbbs.com/dist/';
   dataUrl = `${this.originURL}services/loaddata.php?amount=${this.loadCount}`;
@@ -31,22 +32,21 @@ class AppState {
   }
   @action('initial load data')
   initialLoad() {
-    this.loading=true;
     let getDataReq = new Request(this.dataUrl,{method:'GET',mode:'cors', 'Accept': 'application/json', 'Content-Type': 'application/json'});
     fetch(getDataReq)
     .then(res => res.json())
     .then(action(json => {
       this.data = json.messages;
       this.leastId = json.leastId;
-      this.loading = false;
       let currMobile = this.getMobileFromCookie();
       this.userMobile = currMobile.length>0?currMobile:'';
       if(json.length < this.loadCount){
         this.hasHistoryMessage = false;
       }
+      this.loading = false;
       this.listeningData()
     }))
-    .catch(e => {console.error('fetch error>>'+e);this.loading=false;})
+    .catch(e => {console.error('fetch error>>'+e);})
   }
   @action('listening new messages')
   listeningData() {
@@ -60,7 +60,12 @@ class AppState {
         self.leastId = newOne.id;
         self.userMobile = newOne.mobile;
         self.data.push(newOne);
-        self.scrollMessageBox();
+        if(self.noAtBottom()){
+          self.hasUnread = true;
+        }else{
+          self.hasUnread = false;
+        }
+        //self.scrollMessageBox();
         self.listeningData();
       }
     }
@@ -95,12 +100,14 @@ class AppState {
   }
   @action('auto scroll the messagesBox') 
   scrollMessageBox() {
-    console.log('scrolling  box....')
+    console.log(this.loadTimes)
      let messageBox = this.rollBox;
       if( messageBox.offsetHeight < messageBox.scrollHeight ){
         let curTop = messageBox.scrollTop,D = messageBox.scrollHeight - this.totalHeight;
-        if( this.scrollInterval != 0 ){
-          let startT = new Date().getTime(),T =this.scrollInterval;
+        if(this.loadTimes > 0){
+          messageBox.scrollTop = curTop + D;
+        }else{
+          let startT = new Date().getTime(),T = 400;
           requestAnimationFrame(function step() {
             let movingT = new Date().getTime() - startT;
             messageBox.scrollTop = curTop + (movingT/T * D);
@@ -108,37 +115,38 @@ class AppState {
               requestAnimationFrame(step)
             }
           })
-        } else {
-          messageBox.scrollTop = curTop + D;
         }
-      }else {
-        return;
       }
     this.totalHeight = messageBox.scrollHeight;
   }
   @action('wheel the messages box')
   onMessagesBoxWheel(evt) {
     evt.stopPropagation();
-    //console.info(evt)
     let messageBox = this.rollBox;
     let curScrollTop = messageBox.scrollTop;
     let maxScrollTop = messageBox.scrollHeight - messageBox.offsetHeight;
     if(evt.type == 'wheel'){
       let pointY = curScrollTop + evt.deltaY;
-      if(pointY < 0 && this.hasHistoryMessage==true){this.loadHistoryData() }
-      if(pointY > maxScrollTop){this.loadTimes = 0 }
+      if(pointY < 0 && this.hasHistoryMessage==true){
+        this.loadHistoryData() 
+      }
+      if(pointY > maxScrollTop){
+        this.loadTimes = 0;
+        this.hasUnread =false
+      }
     }else{
       if(curScrollTop <= 0 && this.hasHistoryMessage==true){
         this.loadHistoryData() 
       }
       if(curScrollTop >= maxScrollTop){
-        this.loadTimes=0; 
+        this.loadTimes=0;
+        this.hasUnread =false 
       }
     }
   }
   @action('loading the history messages')
   loadHistoryData() {
-    this.loading=true;
+    this.loading = true;
     this.loadTimes++;
     let targetUrl = this.historyDataUrl+this.data[0].id;
     let getEarlyReq = new Request(targetUrl,{method:'GET',mode:'cors', 'Accept': 'application/json', 'Content-Type': 'application/json'});
@@ -152,10 +160,26 @@ class AppState {
       this.data = newData;
       this.loading = false;
     })
-    .catch(err=>{console.error(err);this.loading=false})
+    .catch(err=>{console.error(err);})
+  }
+  @action('rollbox at bottom')
+  noAtBottom() {
+    let messageBox = this.rollBox;
+    let curScrollTop = messageBox.scrollTop;
+    let maxScrollTop = messageBox.scrollHeight - messageBox.offsetHeight;
+    return maxScrollTop>curScrollTop;
+  }
+  @action('roll to new unread message')
+  rollToBottom() {
+    this.loadTimes = 0;
+    this.hasUnread = false;
+    let self = this;
+    setTimeout(function () {
+      self.scrollMessageBox();
+    }, 100)
   }
   @computed get scrollInterval() {
-    return this.loadTimes == 0?500:0;
+    return this.loadTimes==0?400:0;
   }
   @computed get pageTitle() {
     switch(this.messageType) {
