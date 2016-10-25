@@ -1,7 +1,7 @@
 'use strict';
 let express = require('express');
 let app = new express();
-app.use(express.static('./dist'));
+app.use(express.static('dist'));
 app.get('/',(req,res)=>{
 	res.send('index.html')
 })

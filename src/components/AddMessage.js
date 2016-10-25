@@ -1,7 +1,6 @@
 import React,{Component} from 'react'
 import { observer } from 'mobx-react';
 import AddMessageState from '../AddMessageState';
-import AppState from '../AppState';
 @observer
 class AddMessage extends Component {
 	constructor(){
@@ -9,14 +8,16 @@ class AddMessage extends Component {
 		this.addMessageState = new AddMessageState();
 	}
 	render() {
+		console.log('render addmessage component..')
 	let addMessageState = this.addMessageState;
 	let hasMobile = addMessageState.validateMobile?' up':'';
 	let typeShow = addMessageState.showTypeList?' active':'';
 		return(
+
 			<div className={"new-message-box"+hasMobile}>
 				<div className={"message-input"} data-error="输入正确手机号码">
 					<span className="input-type">手机</span>
-					<input type="text" className="form-control" value={addMessageState.mobile} placeholder="手机号码" onChange={this.onMobileChange}/>
+					<input type="text" className="form-control" value={addMessageState.mobile} placeholder="手机号码" ref="inputMobile" onChange={this.onMobileChange}/>
 					<button className="input-button btn btn-success" type="button" onClick={this.onCheckMobile}>设置</button>
 				</div>
 				<div className={"message-input"} data-error="输入不少于5个字的信息">
@@ -35,11 +36,12 @@ class AddMessage extends Component {
 	onMobileChange = (e) => {
 		this.addMessageState.mobile = e.target.value
 	}
-	onCheckMobile = (e) => {
-		this.addMessageState.checkMobile()
+	onCheckMobile = () => {
+		this.addMessageState.checkMobile(inputMobile.value)
 	}
 	onModifyMobile = (e) => {
-		this.addMessageState.mobile = ''
+		this.addMessageState.mobile = '';
+		this.refs.inputMobile.value = '';
 		this.addMessageState.showTypeList = false
 	}
 	onContentChange =(e) => {

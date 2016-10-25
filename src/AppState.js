@@ -13,12 +13,7 @@ class AppState {
   loadCount = 20;
   dataUrl = `http://xaljbbs.com/dist/services/loaddata.php?amount=${this.loadCount}`;
   historyDataUrl = `${this.dataUrl}&startIndex=`;
-  //socketUrl = 'xaljbbs.com/dist/services/listening.php';
-  socketUrl = 'ws://xaljbbs.com/dist/services/listening.php';
-  socketCfg = {
-    ip:'',
-    port:'',
-  }
+  listeningUrl = `http://xaljbbs.com/dist/services/loaddata.php?leastId=`;
   constructor() {
     //this.initialLoad()
   }
@@ -31,21 +26,47 @@ class AppState {
     .then(action(json => {
       this.data = json.messages;
       this.leastId = json.leastId;
-      this.userMobile = json.userMobile || this.userMobile;
       this.loading = false;
+      let currMobile = this.getMobileFromCookie();
+      this.userMobile = currMobile.length>0?currMobile:'';
       if(json.length < this.loadCount){
         this.hasHistoryMessage = false;
       }
+      this.listeningData()
     }))
-    .catch(e => {console.error('fetch error'+e);this.loading=false;})
+    .catch(e => {console.error('fetch error>>'+e);this.loading=false;})
   }
   @action('listening new messages')
   listeningData() {
-    let ws = new WebSocket(this.socketUrl)
-    //console.log(ws)
-    ws.onopen = (e)=>console.log('open websocket')
-    ws.onmessage = (e)=>console.log(e)
-    ws.onerror = (e)=>console.log('websocket error')
+    let self = this;
+    let targetUrl = this.listeningUrl+this.leastId;
+    let xhr = new XMLHttpRequest();
+    window.xhr = xhr;
+    xhr.onreadystatechange = function () {
+      if(xhr.readyState == 4 && xhr.responseText){
+        console.log(xhr.responseText)
+        let newOne = JSON.parse(xhr.responseText);
+        self.leastId = newOne.id;
+        self.userMobile = newOne.mobile;
+        self.data.push(newOne);
+        self.scrollMessageBox();
+        self.listeningData();
+      }
+    }
+    xhr.onerror = function (e) {
+      console.error(e);
+      setTimeout(function () {
+          self.listeningData()
+        }, 500)
+    }
+    xhr.ontimeout = function () {
+      setTimeout(function () {
+          self.listeningData()
+        }, 500)
+    }
+    xhr.timeout = 20000;
+    xhr.open('GET',targetUrl);
+    xhr.send()
   }
   @action toggleTypeFilter(e) {
     e.stopPropagation()
@@ -67,7 +88,7 @@ class AppState {
       if( messageBox.offsetHeight < messageBox.scrollHeight ){
         let curTop = messageBox.scrollTop,D = messageBox.scrollHeight - this.totalHeight;
         if( this.scrollInterval != 0 ){
-          let startT = new Date().getTime(),T = this.scrollInterval;
+          let startT = new Date().getTime(),T =curTop>100?200:this.scrollInterval;
           requestAnimationFrame(function step() {
             let movingT = new Date().getTime() - startT;
             messageBox.scrollTop = curTop + (movingT/T * D);
@@ -93,10 +114,14 @@ class AppState {
     if(evt.type == 'wheel'){
       let pointY = curScrollTop + evt.deltaY;
       if(pointY < 0 && this.hasHistoryMessage==true){ this.loadHistoryData() }
-      if(pointY > maxScrollTop){ console.log('max scroll');this.loadTimes = 0 }
+      if(pointY > maxScrollTop){this.loadTimes = 0 }
     }else{
-      if(curScrollTop <= 0 && this.hasHistoryMessage==true){ this.loadHistoryData() }
-      if(curScrollTop >= maxScrollTop){ console.log('max scroll');this.loadTimes = 0 }
+      if(curScrollTop <= 0 && this.hasHistoryMessage==true){
+        this.loadHistoryData() 
+      }
+      if(curScrollTop >= maxScrollTop){
+        this.loadTimes=0; 
+      }
     }
   }
   @action('loading the history messages')
@@ -117,6 +142,17 @@ class AppState {
       this.loading = false;
     })
     .catch(err=>{console.error(err);this.loading=false})
+  }
+  @action ('getUserMobile from cookie')
+  getMobileFromCookie() {
+    let cookies = document.cookie;
+    let idx = cookies.indexOf('userMobile');
+    if(idx<0){
+      return '';
+    }else{
+      let mobile = cookies.slice(idx).split('=')[1].split(';')[0].trim();
+      return mobile;
+    }
   }
   @computed get scrollInterval() {
     return this.loadTimes == 0?500:0;
