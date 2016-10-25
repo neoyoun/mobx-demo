@@ -11,11 +11,23 @@ class AppState {
   @observable leastId = 0;
   @observable totalHeight =0;
   loadCount = 20;
-  dataUrl = `http://xaljbbs.com/dist/services/loaddata.php?amount=${this.loadCount}`;
+  originURL = 'http://xaljbbs.com/dist/';
+  dataUrl = `${this.originURL}services/loaddata.php?amount=${this.loadCount}`;
   historyDataUrl = `${this.dataUrl}&startIndex=`;
-  listeningUrl = `http://xaljbbs.com/dist/services/loaddata.php?leastId=`;
+  listeningUrl = `${this.originURL}services/loaddata.php?leastId=`;
   constructor() {
     //this.initialLoad()
+  }
+  @action ('getUserMobile from cookie')
+  getMobileFromCookie() {
+    let cookies = document.cookie;
+    let idx = cookies.indexOf('userMobile');
+    if(idx<0){
+      return '';
+    }else{
+      let mobile = cookies.slice(idx).split('=')[1].split(';')[0].trim();
+      return mobile;
+    }
   }
   @action('initial load data')
   initialLoad() {
@@ -44,7 +56,6 @@ class AppState {
     window.xhr = xhr;
     xhr.onreadystatechange = function () {
       if(xhr.readyState == 4 && xhr.responseText){
-        console.log(xhr.responseText)
         let newOne = JSON.parse(xhr.responseText);
         self.leastId = newOne.id;
         self.userMobile = newOne.mobile;
@@ -84,11 +95,12 @@ class AppState {
   }
   @action('auto scroll the messagesBox') 
   scrollMessageBox() {
+    console.log('scrolling  box....')
      let messageBox = this.rollBox;
       if( messageBox.offsetHeight < messageBox.scrollHeight ){
         let curTop = messageBox.scrollTop,D = messageBox.scrollHeight - this.totalHeight;
         if( this.scrollInterval != 0 ){
-          let startT = new Date().getTime(),T =curTop>100?200:this.scrollInterval;
+          let startT = new Date().getTime(),T =this.scrollInterval;
           requestAnimationFrame(function step() {
             let movingT = new Date().getTime() - startT;
             messageBox.scrollTop = curTop + (movingT/T * D);
@@ -113,7 +125,7 @@ class AppState {
     let maxScrollTop = messageBox.scrollHeight - messageBox.offsetHeight;
     if(evt.type == 'wheel'){
       let pointY = curScrollTop + evt.deltaY;
-      if(pointY < 0 && this.hasHistoryMessage==true){ this.loadHistoryData() }
+      if(pointY < 0 && this.hasHistoryMessage==true){this.loadHistoryData() }
       if(pointY > maxScrollTop){this.loadTimes = 0 }
     }else{
       if(curScrollTop <= 0 && this.hasHistoryMessage==true){
@@ -126,8 +138,8 @@ class AppState {
   }
   @action('loading the history messages')
   loadHistoryData() {
-    this.loadTimes++;
     this.loading=true;
+    this.loadTimes++;
     let targetUrl = this.historyDataUrl+this.data[0].id;
     let getEarlyReq = new Request(targetUrl,{method:'GET',mode:'cors', 'Accept': 'application/json', 'Content-Type': 'application/json'});
     fetch(getEarlyReq)
@@ -138,21 +150,9 @@ class AppState {
         this.hasHistoryMessage = false;
       }
       this.data = newData;
-      console.log(this.data.length);
       this.loading = false;
     })
     .catch(err=>{console.error(err);this.loading=false})
-  }
-  @action ('getUserMobile from cookie')
-  getMobileFromCookie() {
-    let cookies = document.cookie;
-    let idx = cookies.indexOf('userMobile');
-    if(idx<0){
-      return '';
-    }else{
-      let mobile = cookies.slice(idx).split('=')[1].split(';')[0].trim();
-      return mobile;
-    }
   }
   @computed get scrollInterval() {
     return this.loadTimes == 0?500:0;

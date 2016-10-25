@@ -31,7 +31,7 @@ class App extends Component {
         <div className="messages-list-box" ref="messageBox" onTouchEnd={this.onTouchEndHandle} onWheel={this.onMessagesBoxWheel}>
         <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         </div>
-       <AddMessage currMobile={appState.userMobile}/>
+       <AddMessage/>
       </div>
     );
   }
@@ -42,6 +42,7 @@ class App extends Component {
     appState.initialLoad();
   }
   componentDidUpdate() {
+    console.log('will update...')
     this.props.appState.scrollMessageBox()
   }
   hideTypeFilter = (e) => {
