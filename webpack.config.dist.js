@@ -3,7 +3,7 @@ let webpack = require('webpack');
 let path = require('path');
 let srcPath = path.resolve(__dirname,'./src-dist');
 module.exports = {
-	entry: srcPath+'/index.jsx',
+	entry: ['whatwg-fetch',srcPath+'/index.jsx'],
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: 'bundle.js',
@@ -49,14 +49,14 @@ module.exports = {
     }
   },
 		plugins: [
-			/*new webpack.DefinePlugin({
+			new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
-    	}),*/
-			/*new webpack.optimize.UglifyJsPlugin({
+    	}),
+			new webpack.optimize.UglifyJsPlugin({
 				compress:{
 					warnings:false
 				}
 			}),
-	    new webpack.NoErrorsPlugin()*/
+	    new webpack.NoErrorsPlugin()
 		]
 }

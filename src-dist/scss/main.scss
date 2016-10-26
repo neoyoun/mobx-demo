@@ -15,8 +15,13 @@ body {
 		padding-top: 40px;
 		padding-bottom: 40px;
 		background-color: #f8f8f8;
-		background-image: url('../imgs/list-bg.png');
+		background-image: url('../../imgs/list-bg.png');
 		background-size: 100% 100%;
+
+		.main-wrap {
+			width: 100%;
+			height: 100%
+		}
 	}
 .main-container{
 	position: relative;
@@ -78,6 +83,21 @@ body {
 		@extend %type-list;
 		right: 0;
 	}
+	.unread-tips{
+		position: absolute;
+		z-index: 1;
+		cursor: pointer;
+		bottom: 2px;
+		right: 2em;
+		background-color: #fff;
+		color: #3c763d;
+		border-radius: 10px;
+		padding: 6px 12px;
+		display: none;
+		&.on{
+			display: block;
+		}
+	}
 	.new-message-box {
 		position: fixed;
 		bottom: 0;
@@ -101,7 +121,8 @@ body {
 			input {
 				border: 1px solid #aaa;
 				border-radius: 0;
-				margin-right: .5em;
+				margin-right: .1em;
+				margin-left: .1em;
 
 				&:active,&:focus {
 					box-shadow: none;
@@ -115,8 +136,6 @@ body {
 				flex:1 0 5em;
 				text-align: center;
 				line-height: 32px;
-				background-color: #eee;
-				border:1px solid #ccc;
 				cursor: pointer;
 			}
 			.input-button {

@@ -1,5 +1,5 @@
 import { observable,computed,autorun,action } from 'mobx';
-
+const ORIGINURL = 'http://xaljbbs.com/dist/';
 class AddMessageState {
   @observable content='';
   @observable mobile='';
@@ -8,8 +8,7 @@ class AddMessageState {
   @observable showTypeList = false;
   @observable mobileSet = '';
   @observable contentSet = '';
-  originUrl = 'http://xaljbbs.com/dist/';
-  postMessageUrl = this.originUrl+'services/insertData.php';
+  postMessageUrl = ORIGINURL+'services/insertData.php';
   
   @computed get validateMobile() {
     let mobileTest = /^1([358]\d|47|7[017])\d{8}$/;
@@ -28,7 +27,7 @@ class AddMessageState {
   getMobileFromCookie() {
     let cookies = document.cookie;
     let idx = cookies.indexOf('userMobile');
-    if(idx>0){
+    if(idx>-1){
       this.mobile = cookies.slice(idx).split('=')[1].split(';')[0].trim();
     }
   }
@@ -42,6 +41,10 @@ class AddMessageState {
     }
   @action toggleTypeList() {
     this.showTypeList = !this.showTypeList;
+  }
+  @action ('hide the typelist ')
+  hideTypeList() {
+    this.showTypeList = false;
   }
   @action setMessageType(type){
     this.type = type;
@@ -63,7 +66,6 @@ class AddMessageState {
       method:'POST',
       mode:'cors',
       body:data,
-      //credentials: 'include'
     }
     let postReq = new Request(this.postMessageUrl,postConfig)
     fetch(postReq)

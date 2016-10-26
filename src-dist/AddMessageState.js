@@ -1,12 +1,13 @@
 import { observable,computed,autorun,action } from 'mobx';
-
+const ORIGINURL = 'http://bbs.pjsw.cn/';
 class AddMessageState {
   @observable content='';
   @observable mobile='';
   @observable type=10;
-  //@observable validateMobile=false;
   @observable showTypeList = false;
-  postMessageUrl = "http://xaljbbs.com/dist/services/insertData.php";
+  @observable mobileSet = '';
+  @observable contentSet = '';
+  postMessageUrl = ORIGINURL+'services/insertData.php';
   
   @computed get validateMobile() {
     let mobileTest = /^1([358]\d|47|7[017])\d{8}$/;
@@ -21,27 +22,37 @@ class AddMessageState {
       case 20: return '出售';
     }
   }
-  @action checkMobile() {
+  @action ('getUserMobile from cookie')
+  getMobileFromCookie() {
+    let cookies = document.cookie;
+    let idx = cookies.indexOf('userMobile');
+    if(idx>-1){
+      this.mobile = cookies.slice(idx).split('=')[1].split(';')[0].trim();
+    }
+  }
+  @action checkMobile(value) {
+      if(value){
+        this.mobile = value
+      }
       if(!this.validateMobile){
-        alert('请正确输入手机号码')
+        this.mobileSet.parentNode.classList.add('tip')
       }
     }
   @action toggleTypeList() {
     this.showTypeList = !this.showTypeList;
   }
-  @action messageTypeChange(e) {
-    this.type = e.target.value
-    }
-  @action setContent(value){
-    this.content = value
+  @action ('hide the typelist ')
+  hideTypeList() {
+    this.showTypeList = false;
   }
   @action setMessageType(type){
     this.type = type;
     this.showTypeList = false;
   }
-  @action onAddNewOne(){
+  @action('add message to database') 
+  onAddNewOne(){
     if(! (this.validateMobile && this.validateContent)){
-      alert('输入内容不能少于5个字')
+      this.contentSet.parentNode.classList.add('tip')
       return false;
     }
     let data = {
@@ -54,7 +65,6 @@ class AddMessageState {
       method:'POST',
       mode:'cors',
       body:data,
-      credentials: 'include'
     }
     let postReq = new Request(this.postMessageUrl,postConfig)
     fetch(postReq)
@@ -65,9 +75,15 @@ class AddMessageState {
       })
       .catch(err=>console.error(`fetch fail:${err}`))
      this.content = '';
+     this.rememberUser()
   }
-  /*@computed set setMessageType(e){
-    this.type = e.target.
-  }*/
+  @action('set user mobile to cookie')
+  rememberUser() {
+    let userMobile = this.mobile;
+    let exp = new Date();
+    let expiresTimeStamp = 60*1000*60;
+    exp.setTime(exp.getTime() + expiresTimeStamp*24);
+    document.cookie = `userMobile=${this.mobile};path=/;expires=${exp.toGMTString()}`;
+  }
 }
 export default AddMessageState;

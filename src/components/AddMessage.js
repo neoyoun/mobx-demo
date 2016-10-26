@@ -12,7 +12,7 @@ class AddMessage extends Component {
 	let hasMobile = addMessageState.validateMobile?' up':'';
 	let typeShow = addMessageState.showTypeList?' active':'';
 		return(
-			<div className={"new-message-box"+hasMobile}>
+			<div className={"new-message-box"+hasMobile} onClick={this.onHideTypeList}>
 				<div className={"message-input"} data-error="输入正确手机号码">
 					<span className="input-type">手机</span>
 					<input type="text" className="form-control" value={addMessageState.mobile} placeholder="手机号码" ref="inputMobile" onChange={this.onMobileChange}/>
@@ -24,7 +24,7 @@ class AddMessage extends Component {
 			  		<li className="send-type-item" value="20" onClick={this.onMessageTypeChange}>出售</li>
 			  		<li className="send-type-item" value="10" onClick={this.onMessageTypeChange}>求购</li>
 			  	</ul>
-					<span className="input-type" onClick={this.onToggleTypeList}>{addMessageState.messageTypeName}</span>
+					<span className="input-type btn-info" onClick={this.onToggleTypeList}>{addMessageState.messageTypeName}</span>
 					<input type="text" className="form-control" value={addMessageState.content} placeholder="输入你的信息" onChange={this.onContentChange}/>
 					<button className="input-button btn btn-success" type="button" onClick={this.onAddNewOne} ref="contentSet">发送</button>
 			</div>
@@ -56,8 +56,13 @@ class AddMessage extends Component {
 		e.stopPropagation()
 		this.addMessageState.setMessageType(e.target.value)
 	}
-	onToggleTypeList = () => {
+	onToggleTypeList = (e) => {
+		e.stopPropagation()
 		this.addMessageState.toggleTypeList();
+	}
+	onHideTypeList = (e) => {
+		e.stopPropagation()
+		this.addMessageState.hideTypeList();
 	}
 	onAddNewOne = () => {
 		this.addMessageState.onAddNewOne()

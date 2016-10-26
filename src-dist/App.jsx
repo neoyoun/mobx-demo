@@ -9,15 +9,14 @@ import MessagesList from 'components/MessagesList';
 import AddMessage from 'components/AddMessage';
 @observer
 class App extends Component {
-  constructor(props){
-    super(props)
-  }
   render() {
     let appState = this.props.appState;
     let isVisible = appState.showTypeFilter;
     let filterStyle = {
       display:isVisible?'':'none'
     }
+    let unReadTips = appState.hasUnread;
+        unReadTips = unReadTips?' on':'';
     return (
       <div className='main-container' onClick={this.hideTypeFilter}>
         <LoadingMask isVisible={appState.loading}/>
@@ -29,7 +28,8 @@ class App extends Component {
         <div className="messages-list-box" ref="messageBox" onTouchEnd={this.onTouchEndHandle} onWheel={this.onMessagesBoxWheel}>
         <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         </div>
-       <AddMessage/>
+        <div className={"unread-tips"+unReadTips} onClick={this.onRunToButtom}>有新消息</div>
+        <AddMessage/>
       </div>
     );
   }
@@ -38,13 +38,6 @@ class App extends Component {
     let appState = this.props.appState;
     appState.rollBox = messageBox;
     appState.initialLoad();
-    //监听消息 最后做
-    /*setTimeout(function () {
-      appState.listeningData()
-    }, 500)*/
-  }
-  componentDidUpdate() {
-    this.props.appState.scrollMessageBox()
   }
   hideTypeFilter = (e) => {
     let isVisible = this.props.appState.showTypeFilter;
@@ -56,10 +49,16 @@ class App extends Component {
     this.props.appState.setVisibleType(e.target.value)
   }
   onMessagesBoxWheel = (e) => {
+    e.stopPropagation()
     this.props.appState.onMessagesBoxWheel(e)
   }
   onTouchEndHandle = (e) => {
-    this.props.appState.onMessagesBoxWheel(e)
+    e.stopPropagation()
+    this.props.appState.onMessagesBoxWheel()
+  }
+  onRunToButtom = (e) => {
+    e.stopPropagation()
+    this.props.appState.runToBottom();
   }
 };
 

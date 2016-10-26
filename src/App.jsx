@@ -13,7 +13,6 @@ class App extends Component {
     super(props)
   }
   render() {
-    console.log('rendering app component..')
     let appState = this.props.appState;
     let isVisible = appState.showTypeFilter;
     let filterStyle = {
@@ -33,7 +32,7 @@ class App extends Component {
         <div className="messages-list-box" ref="messageBox" onTouchEnd={this.onTouchEndHandle} onWheel={this.onMessagesBoxWheel}>
         <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         </div>
-        <div className={"unread-tips text-success"+unReadTips} onClick={this.rollToBottom}>有新消息</div>
+        <div className={"unread-tips"+unReadTips} onClick={this.onRunToButtom}>有新消息</div>
         <AddMessage/>
       </div>
     );
@@ -43,9 +42,6 @@ class App extends Component {
     let appState = this.props.appState;
     appState.rollBox = messageBox;
     appState.initialLoad();
-  }
-  componentDidUpdate() {
-    this.props.appState.scrollMessageBox();
   }
   hideTypeFilter = (e) => {
     let isVisible = this.props.appState.showTypeFilter;
@@ -57,14 +53,16 @@ class App extends Component {
     this.props.appState.setVisibleType(e.target.value)
   }
   onMessagesBoxWheel = (e) => {
+    e.stopPropagation()
     this.props.appState.onMessagesBoxWheel(e)
   }
   onTouchEndHandle = (e) => {
-    this.props.appState.onMessagesBoxWheel(e)
+    e.stopPropagation()
+    this.props.appState.onMessagesBoxWheel()
   }
-  rollToBottom = (e) => {
-    e.stopPropagation();
-    this.props.appState.rollToBottom()
+  onRunToButtom = (e) => {
+    e.stopPropagation()
+    this.props.appState.runToBottom();
   }
 };
 
