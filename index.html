@@ -7,5 +7,21 @@
   <body>
     <div id="root" class="main-wrap"></div>
     <script src="/static/bundle.js"></script>
+    <script>
+    	function is_weixin(){
+		    var ua = navigator.userAgent.toLowerCase();
+		    if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		      return true;
+		    } else {
+		      return false;
+		    }
+		  }
+		  window.addEventListener('load',function () {
+		    var url = window.location.href;
+		    if(is_weixin && is_weixin() && !(/\?wxjump=/.test(url))){
+		      location.href = url+'?wxjump='+Math.random();
+		    }
+		  });
+    </script>
   </body>
 </html>

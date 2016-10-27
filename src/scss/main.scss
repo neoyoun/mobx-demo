@@ -13,7 +13,6 @@ body {
 	@extend %mobileSize;
 		height: 100%;
 		padding-top: 40px;
-		padding-bottom: 40px;
 		background-color: #f8f8f8;
 		background-image: url('../../imgs/list-bg.png');
 		background-size: 100% 100%;
@@ -137,6 +136,7 @@ body {
 				text-align: center;
 				line-height: 32px;
 				cursor: pointer;
+				border:1px solid #ccc;
 			}
 			.input-button {
 				flex:1 0 5em;
@@ -169,6 +169,7 @@ body {
 	}
 	@at-root .messages-list-box {
 		@extend %overlay;
+		bottom:40px;
 		overflow: auto;
 		.messages-list {
 			position: relative;

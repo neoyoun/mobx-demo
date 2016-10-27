@@ -14,7 +14,7 @@ class AddMessage extends Component {
 		return(
 			<div className={"new-message-box"+hasMobile} onClick={this.onHideTypeList}>
 				<div className={"message-input"} data-error="输入正确手机号码">
-					<span className="input-type">手机</span>
+					<span className="input-type btn-default">手机</span>
 					<input type="text" className="form-control" value={addMessageState.mobile} placeholder="手机号码" ref="inputMobile" onChange={this.onMobileChange}/>
 					<button className="input-button btn btn-success" type="button" onClick={this.onCheckMobile} ref="mobileSet">设置</button>
 				</div>
