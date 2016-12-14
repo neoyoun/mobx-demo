@@ -36,6 +36,7 @@ body {
  	text-align: center;
  }
  .fixed-bottom {
+ 	@extend %mobileSize;
  	position:fixed;
  	width: 100%;
  	bottom: 0;
@@ -63,9 +64,8 @@ body {
 
 	.add-btn{
 		position: absolute;
-		top: 0;
-		right: 0;
-		padding: 10px;
+		top: 3px;
+		right: 3px;
 		cursor: pointer;
 	}
 	%type-list {
@@ -148,24 +148,6 @@ body {
 				&+.message-item {
 					margin-top: 15px;
 				}
-			}
-		}
-	}
-
-	.filter-box {
-		border-top:1px solid #e8e8e8;
-		.filter-item{
-			padding:10px 0;
-			text-align: center;
-			background-color: #f5f5f5;
-
-			&.sell{
-				color: #fff;
-				background-color: lighten(#007cc3,5%);
-			}
-			&.buy{
-				color: #fff;
-				background-color: lighten(#da251d,5%);
 			}
 		}
 	}

@@ -36,6 +36,7 @@ body {
  	text-align: center;
  }
  .fixed-bottom {
+ 	@extend %mobileSize;
  	position:fixed;
  	width: 100%;
  	bottom: 0;
@@ -63,9 +64,8 @@ body {
 
 	.add-btn{
 		position: absolute;
-		top: 0;
-		right: 0;
-		padding: 10px;
+		top: 3px;
+		right: 3px;
 		cursor: pointer;
 	}
 	%type-list {
@@ -153,10 +153,13 @@ body {
 	}
 
 	.filter-box {
+	/* 	.btn{
+		border-radius: 0px;
+	} */
 		.filter-item{
 			padding:10px 0;
 			text-align: center;
-			background-color: #fff;
+			background-color: #f5f5f5;
 
 			&.sell{
 				color: #fff;

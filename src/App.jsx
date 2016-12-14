@@ -22,9 +22,9 @@ class App extends Component {
         {loading && 
           <LoadingMask />
         }
-        <nav className="page-title panel-info">
+        <nav className="page-title panel-default">
           <div className="panel-heading">{appState.pageTitle}</div>
-          <span className="add-btn text-default" onClick={ e =>appState.toggleAddBox(e)}>发布</span>
+          <span className="btn btn-warning add-btn" onClick={ e =>appState.toggleAddBox(e)}>发布</span>
         </nav>
         <div className="messages-list-box" ref="messageBox" onTouchEnd={e=>this.onTouchEndHandle(e)} onWheel={e=>this.onMessagesBoxWheel(e)}>
         <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>

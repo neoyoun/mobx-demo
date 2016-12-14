@@ -16,9 +16,7 @@ class AppState {
   dataUrl = `${ORIGINURL}services/loaddata.php?amount=${this.loadCount}`;
   historyDataUrl = `${this.dataUrl}&startIndex=`;
   listeningUrl = `${ORIGINURL}services/loaddata.php?leastId=`;
-  constructor() {
-    //this.initialLoad()
-  }
+  
   @action ('getUserMobile from cookie')
   getMobileFromCookie() {
     let cookies = document.cookie;
