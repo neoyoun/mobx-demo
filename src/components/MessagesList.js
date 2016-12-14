@@ -28,7 +28,7 @@ class MessageItem extends Component {
             <img src={faceSrc}/>
           </div>
           <div className="item-content">
-            <h4 className="media-heading">{message.mobile}<small>&nbsp;&nbsp;@{message.addtime}</small></h4>
+            <h5 className="media-heading">{message.mobile}<small>&nbsp;@{message.addtime}</small></h5>
             <div className="message-content">{message.content}</div>
           </div>
         </div>

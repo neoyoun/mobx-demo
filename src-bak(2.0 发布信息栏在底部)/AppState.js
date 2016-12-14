@@ -1,8 +1,7 @@
 import { observable,computed,autorun,action } from 'mobx';
-const ORIGINURL = 'http://bbs.pjsw.cn/';
+const ORIGINURL = 'http://xaljbbs.com/dist/';
 class AppState {
-  @observable showTypeFilter = false;
-  @observable showAddNewBox = false;
+  @observable showTypeFilter=false;
   @observable messageType = 0;
   @observable userMobile = '';
   @observable loading = true;
@@ -95,22 +94,14 @@ class AppState {
     e.stopPropagation()
     this.showTypeFilter = !this.showTypeFilter;
   }
-  @action toggleAddBox(e) {
-    e.stopPropagation()
-    this.showAddNewBox = !this.showAddNewBox;
-  }
-  @action hidePopupLayer() {
+  @action hideTypeFilter() {
     if(this.showTypeFilter){
       this.showTypeFilter= false;
-    }
-    if(this.showAddNewBox){
-      this.showAddNewBox= false;
     }
   }
   @action setVisibleType(type) {
     if(type != this.messageType){
-     this.messageType = type;
-     this.runToBottom() 
+     this.messageType = type; 
    }
   }
   @action('auto scroll the messagesBox') 

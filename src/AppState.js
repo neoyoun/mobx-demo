@@ -1,7 +1,8 @@
 import { observable,computed,autorun,action } from 'mobx';
 const ORIGINURL = 'http://xaljbbs.com/dist/';
 class AppState {
-  @observable showTypeFilter=false;
+  @observable showTypeFilter = false;
+  @observable showAddNewBox = false;
   @observable messageType = 0;
   @observable userMobile = '';
   @observable loading = true;
@@ -94,14 +95,22 @@ class AppState {
     e.stopPropagation()
     this.showTypeFilter = !this.showTypeFilter;
   }
-  @action hideTypeFilter() {
+  @action toggleAddBox(e) {
+    e.stopPropagation()
+    this.showAddNewBox = !this.showAddNewBox;
+  }
+  @action hidePopupLayer() {
     if(this.showTypeFilter){
       this.showTypeFilter= false;
+    }
+    if(this.showAddNewBox){
+      this.showAddNewBox= false;
     }
   }
   @action setVisibleType(type) {
     if(type != this.messageType){
-     this.messageType = type; 
+     this.messageType = type;
+     this.runToBottom() 
    }
   }
   @action('auto scroll the messagesBox') 

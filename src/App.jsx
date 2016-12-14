@@ -4,36 +4,38 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 import LoadingMask from 'components/LoadingMask';
-import MessageTypeFilter from 'components/MessageTypeFilter';
+import VisibilityTypeFilter from 'components/VisibilityTypeFilter';
 import MessagesList from 'components/MessagesList';
 import AddMessage from 'components/AddMessage';
+import UnreadTips from 'components/UnreadTips';
 @observer
 class App extends Component {
   constructor(props){
     super(props)
   }
   render() {
-    let appState = this.props.appState;
-    let isVisible = appState.showTypeFilter;
-    let filterStyle = {
-      display:isVisible?'':'none'
-    }
-    let unReadTips = appState.hasUnread;
-        unReadTips = unReadTips?' on':'';
+    const appState = this.props.appState
+    const {showAddNewBox,showTypeFilter,hasUnread,loading,toggleAddBox} = appState
     return (
-      <div className='main-container' onClick={this.hideTypeFilter}>
-      <DevTools />
-        <LoadingMask isVisible={appState.loading}/>
-        <nav className = "page-title panel-info">
-          <div className ="panel-heading">{appState.pageTitle}</div>
-          <span className="filter-btn text-success" onClick={(e)=>appState.toggleTypeFilter(e)}>筛选</span>
+      <div className='main-container' onClick={e=>this.hidePopupLayer(e)}>
+      {/*<DevTools />*/}
+        {loading && 
+          <LoadingMask />
+        }
+        <nav className="page-title panel-info">
+          <div className="panel-heading">{appState.pageTitle}</div>
+          <span className="add-btn text-default" onClick={ e =>appState.toggleAddBox(e)}>发布</span>
         </nav>
-        <MessageTypeFilter appState={appState}/>
-        <div className="messages-list-box" ref="messageBox" onTouchEnd={this.onTouchEndHandle} onWheel={this.onMessagesBoxWheel}>
+        <div className="messages-list-box" ref="messageBox" onTouchEnd={e=>this.onTouchEndHandle(e)} onWheel={e=>this.onMessagesBoxWheel(e)}>
         <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
         </div>
-        <div className={"unread-tips"+unReadTips} onClick={this.onRunToButtom}>有新消息</div>
-        <AddMessage/>
+        {hasUnread && 
+          <UnreadTips clickHandle={this.onRunToButtom}/>
+        }
+        <VisibilityTypeFilter setVisibleType={type=>appState.setVisibleType(type)} />
+        {showAddNewBox && 
+          <AddMessage />
+        }
       </div>
     );
   }
@@ -43,22 +45,17 @@ class App extends Component {
     appState.rollBox = messageBox;
     appState.initialLoad();
   }
-  hideTypeFilter = (e) => {
-    let isVisible = this.props.appState.showTypeFilter;
-    if(isVisible) {
-      this.props.appState.hideTypeFilter();
-    }
+  hidePopupLayer(e){
+    e.stopPropagation()
+    this.props.appState.hidePopupLayer()
   }
-  setType = (e) => {
-    this.props.appState.setVisibleType(e.target.value)
-  }
-  onMessagesBoxWheel = (e) => {
+  onMessagesBoxWheel(e){
     e.stopPropagation()
     this.props.appState.onMessagesBoxWheel(e)
   }
-  onTouchEndHandle = (e) => {
+  onTouchEndHandle(e) {
     e.stopPropagation()
-    this.props.appState.onMessagesBoxWheel()
+    this.props.appState.onMessagesBoxWheel(e)
   }
   onRunToButtom = (e) => {
     e.stopPropagation()

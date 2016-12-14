@@ -35,6 +35,12 @@ body {
  	z-index: 1;
  	text-align: center;
  }
+ .fixed-bottom {
+ 	position:fixed;
+ 	width: 100%;
+ 	bottom: 0;
+ 	z-index: 1;
+ }
 
 	.loading-mask {
 		position: fixed;
@@ -44,7 +50,6 @@ body {
 		bottom: 0;
 		z-index: 5;
 		background-color: rgba(250,250,250,.5);
-		display: none;
 
 		&.on {
 			display: block;
@@ -56,7 +61,7 @@ body {
 		}
 	}
 
-	.filter-btn{
+	.add-btn{
 		position: absolute;
 		top: 0;
 		right: 0;
@@ -86,85 +91,27 @@ body {
 		position: absolute;
 		z-index: 1;
 		cursor: pointer;
-		bottom: 2px;
+		bottom: 45px;
 		right: 2em;
 		background-color: #fff;
 		color: #3c763d;
 		border-radius: 10px;
 		padding: 6px 12px;
-		display: none;
-		&.on{
-			display: block;
-		}
 	}
-	.new-message-box {
-		position: fixed;
-		bottom: 0;
-		height: 40px;
-		@extend %mobileSize;
+	.new_message_box{
+		position:absolute;
+		width:80%;
+		left:10%;
+		top: 20%;
+		background-color: #fff;
 
-		&.up {
-			.message-input:nth-child(1){
-				transform:translateY(-100%) rotateX(90deg);
-			}
-			.message-input:nth-child(2){
-				transform:translateY(-100%)
-			}
-		}
 
-		.message-input {
-			display: flex;
-			padding: 3px 0;
-			transition:all .5s;
-
-			input {
-				border: 1px solid #aaa;
-				border-radius: 0;
-				margin-right: .1em;
-				margin-left: .1em;
-
-				&:active,&:focus {
-					box-shadow: none;
-				}
-			}
-			button {
-				border-radius: 0;
-			}
-
-			.input-type {
-				flex:1 0 5em;
-				text-align: center;
-				line-height: 32px;
-				cursor: pointer;
-				border:1px solid #ccc;
-			}
-			.input-button {
-				flex:1 0 5em;
-			}
-			&.tip{
-				&::after{
-					content: attr(data-error);
-					color: #f43;
-					position: absolute;
-					right: 6em;
-					margin-top: -1em;
-				}
-			}
-		}
-
-		.send-type-list{
-			transform:translateY(-100%);
-			@extend %type-list;
-			padding-top: 0;
-			display: none;
-			&.active {
-				display: block;
-			}
-			.user-mobile {
-				background-color: #ccc;
-				color: #333;
-				line-height: 2;
-			}
+		.input-box.has-error::after{
+			content: attr(data-error);
+			color: #f43;
+			position: absolute;
+			top:.5em;
+			right: 1.5em;
 		}
 	}
 	@at-root .messages-list-box {
@@ -187,6 +134,10 @@ body {
 						padding: 8px;
 						margin: 0 5px;
 						background-color: #fff;
+
+						.message-content{
+							word-break:break-all;
+						}
 					}
 				&.send{
 					flex-direction:row-reverse;
@@ -197,6 +148,23 @@ body {
 				&+.message-item {
 					margin-top: 15px;
 				}
+			}
+		}
+	}
+
+	.filter-box {
+		.filter-item{
+			padding:10px 0;
+			text-align: center;
+			background-color: #fff;
+
+			&.sell{
+				color: #fff;
+				background-color: lighten(#007cc3,5%);
+			}
+			&.buy{
+				color: #fff;
+				background-color: lighten(#da251d,5%);
 			}
 		}
 	}

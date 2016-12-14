@@ -4,9 +4,9 @@ class AddMessageState {
   @observable content='';
   @observable mobile='';
   @observable type=10;
+  @observable showTypeList = false;
   @observable mobileSet = '';
   @observable contentSet = '';
-
   postMessageUrl = ORIGINURL+'services/insertData.php';
   
   @computed get validateMobile() {
@@ -31,20 +31,28 @@ class AddMessageState {
     }
   }
   @action checkMobile(value) {
-    if(!value) return false;
-    this.mobile = value
+      if(value){
+        this.mobile = value
+      }
       if(!this.validateMobile){
-        this.mobileSet.parentNode.classList.add('has-error')
+        this.mobileSet.parentNode.classList.add('tip')
       }
     }
+  @action toggleTypeList() {
+    this.showTypeList = !this.showTypeList;
+  }
+  @action ('hide the typelist ')
+  hideTypeList() {
+    this.showTypeList = false;
+  }
   @action setMessageType(type){
     this.type = type;
+    this.showTypeList = false;
   }
   @action('add message to database') 
-  onAddNewOne(e){
-    if(!(this.validateMobile && this.validateContent)){
-      this.contentSet.parentNode.classList.add('has-error')
-      e.stopPropagation()
+  onAddNewOne(){
+    if(! (this.validateMobile && this.validateContent)){
+      this.contentSet.parentNode.classList.add('tip')
       return false;
     }
     let data = {
@@ -53,7 +61,6 @@ class AddMessageState {
       type : this.type
     }
     data = JSON.stringify(data);
-    console.log(data)
     let postConfig = {
       method:'POST',
       mode:'cors',
