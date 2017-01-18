@@ -6,7 +6,6 @@ import App from './App';
 
 //window.appState = appState;
 const appState = new AppState();
-window.appState = appState;
 render(
   <AppContainer>
     <App appState={appState}/>
@@ -15,6 +14,7 @@ render(
 );
 
 if (module.hot) {
+  window.appState = appState;
   module.hot.accept('./App', () => {
     const NextApp = require('./App').default;
     render(

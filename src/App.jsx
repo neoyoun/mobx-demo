@@ -18,7 +18,7 @@ class App extends Component {
     const {showAddNewBox,showTypeFilter,hasUnread,loading,toggleAddBox} = appState
     return (
       <div className='main-container' onClick={e=>this.hidePopupLayer(e)}>
-      {/*<DevTools />*/}
+      <DevTools />
         {loading && 
           <LoadingMask />
         }
