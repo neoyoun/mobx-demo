@@ -30,6 +30,10 @@ class MessageItem extends Component {
           <div className="item-content">
             <h5 className="media-heading">{message.mobile}<small>&nbsp;@{message.addtime}</small></h5>
             <div className="message-content">{message.content}</div>
+            <div className="message-content"> {message.code?'配件代码: '+message.code:'' }</div>
+            <div className="message-content"> {message.codeDesc?'配件名称: '+message.codeDesc:'' }</div>
+            <div className="message-content"> {message.brand?'车型: '+message.brand:'' }</div>
+            
           </div>
         </div>
       )

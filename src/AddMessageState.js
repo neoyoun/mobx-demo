@@ -1,23 +1,34 @@
 import { observable,computed,autorun,action } from 'mobx';
-const ORIGINURL = 'http://xaljbbs.com/dist/';
+const ORIGINURL = module.hot?'http://xaljbbs.com/dist/':'http://bbs.pjsw.cn';
 class AddMessageState {
-  @observable content='';
-  @observable mobile='';
-  @observable type=10;
+ // @observable content='';
+ // @observable mobile='';
+  //@observable type=10;
   @observable mobileSet = '';
   @observable contentSet = '';
+  //@observable brand = '';
+  //@observable code = '';
+  //@observable desc = '';
+  @observable messageInfo = {
+    type:10,
+    mobile:'',
+    brand:'',
+    code:'',
+    desc:'',
+    content:'',
+  }
 
   postMessageUrl = ORIGINURL+'services/insertData.php';
   
   @computed get validateMobile() {
     let mobileTest = /^1([358]\d|47|7[017])\d{8}$/;
-    return mobileTest.test(this.mobile);
+    return mobileTest.test(this.messageInfo.mobile);
   }
   @computed get validateContent() {
-      return this.content.length > 5
+      return this.messageInfo.content.length >= 5
     }
   @computed get messageTypeName() {
-    switch(this.type){
+    switch(this.messageInfo.type){
       case 10: return '求购';
       case 20: return '出售';
     }
@@ -27,33 +38,36 @@ class AddMessageState {
     let cookies = document.cookie;
     let idx = cookies.indexOf('userMobile');
     if(idx>-1){
-      this.mobile = cookies.slice(idx).split('=')[1].split(';')[0].trim();
+      let cookieMobile = cookies.slice(idx).split('=')[1].split(';')[0].trim();
+      if(cookieMobile && !isNaN(parseInt(cookieMobile,10))){
+        this.messageInfo.mobile = parseInt(cookieMobile,10)
+      }
     }
   }
   @action checkMobile(value) {
     if(!value) return false;
-    this.mobile = value
+    this.messageInfo.mobile = value
       if(!this.validateMobile){
         this.mobileSet.parentNode.classList.add('has-error')
       }
     }
   @action setMessageType(type){
-    this.type = type;
+    this.messageInfo.type = type;
   }
   @action('add message to database') 
   onAddNewOne(e){
-    if(!(this.validateMobile && this.validateContent)){
+    if(!this.validateMobile){
+      this.mobileSet.parentNode.classList.add('has-error')
+    }
+    if(!this.validateContent){
       this.contentSet.parentNode.classList.add('has-error')
+    }
+    if(!(this.validateMobile && this.validateContent)){
       e.stopPropagation()
       return false;
     }
-    let data = {
-      mobile : this.mobile,
-      content : this.content,
-      type : this.type
-    }
+    let data = Object.assign({},this.messageInfo);
     data = JSON.stringify(data);
-    console.log(data)
     let postConfig = {
       method:'POST',
       mode:'cors',
@@ -72,11 +86,11 @@ class AddMessageState {
   }
   @action('set user mobile to cookie')
   rememberUser() {
-    let userMobile = this.mobile;
+    let userMobile = this.messageInfo.mobile;
     let exp = new Date();
     let expiresTimeStamp = 60*1000*60;
     exp.setTime(exp.getTime() + expiresTimeStamp*24);
-    document.cookie = `userMobile=${this.mobile};path=/;expires=${exp.toGMTString()}`;
+    document.cookie = `userMobile=${this.messageInfo.mobile};path=/;expires=${exp.toGMTString()}`;
   }
 }
 export default AddMessageState;

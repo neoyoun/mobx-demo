@@ -1,5 +1,6 @@
 import { observable,computed,autorun,action } from 'mobx';
-const ORIGINURL = 'http://xaljbbs.com/dist/';
+const ORIGINURL = module.hot?'http://xaljbbs.com/dist/':'http://bbs.pjsw.cn';
+
 class AppState {
   @observable showTypeFilter = false;
   @observable showAddNewBox = false;
@@ -56,11 +57,9 @@ class AppState {
     let self = this;
     let targetUrl = this.listeningUrl+this.leastId;
     let xhr = new XMLHttpRequest();
-    window.xhr = xhr;
     xhr.onreadystatechange = function () {
       if(xhr.readyState == 4 && xhr.responseText){
         let newOne = JSON.parse(xhr.responseText);
-        console.log('boxAtBottom->',self.boxAtBottom)
         if(!self.boxAtBottom){
           self.hasUnread = true;
         }else{

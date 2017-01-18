@@ -1,7 +1,8 @@
 'usr strict';
 let webpack = require('webpack');
 let path = require('path');
-let srcPath = path.resolve(__dirname,'./src-dist');
+let ExtractTextPlugin = require("extract-text-webpack-plugin");
+let srcPath = path.resolve(__dirname,'./src');
 module.exports = {
 	entry: ['whatwg-fetch',srcPath+'/index.jsx'],
 	output: {
@@ -19,11 +20,12 @@ module.exports = {
 			{
 				test: /\.css$/,
 				exclude: /node_modules/,
-				loader: 'style-loader!css-loader'
+				loader:  ExtractTextPlugin.extract('style-loader','css-loader')
 			},
 			{
 				test: /\.s(a|c)ss$/,
 				loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
+				//loader: ExtractTextPlugin.extract('style','css','sass?outputStyle=expanded')
 			},
 			{
 				test: /\.(png|jpg|gif|)$/,
@@ -48,15 +50,16 @@ module.exports = {
       'imgs':`${srcPath}/imgs`
     }
   },
-		plugins: [
-			new webpack.DefinePlugin({
+	plugins: [
+		new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     	}),
-			new webpack.optimize.UglifyJsPlugin({
+		new webpack.optimize.UglifyJsPlugin({
 				compress:{
 					warnings:false
 				}
 			}),
+		new ExtractTextPlugin("[name].css"),
 	    new webpack.NoErrorsPlugin()
 		]
 }

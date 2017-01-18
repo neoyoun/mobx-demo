@@ -3,7 +3,7 @@ let srcPath = path.resolve(__dirname,'./src');
 let webpack = require('webpack');
 let BowerWebpackPlugin = require('bower-webpack-plugin');
 
-module.exports = {
+wepackConfig = {
   devtool: 'eval',
   entry: [
     'react-hot-loader/patch',
@@ -54,3 +54,5 @@ module.exports = {
     ]
   }
 };
+
+module.exports = wepackConfig

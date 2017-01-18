@@ -5,12 +5,14 @@ import AddMessageState from '../AddMessageState';
 class AddMessage extends Component {
 	constructor(){
 		super()
-		this.addMessageState = new AddMessageState();
+		this.store = new AddMessageState();
+		
 	}
 	render() {
-	let addMessageState = this.addMessageState;
-	let hasMobile = addMessageState.validateMobile?' up':'';
-	let typeShow = addMessageState.showTypeList?' active':'';
+	//let addMessageState = this.store;
+	let {messageInfo} = this.store;
+	//let hasMobile = addMessageState.validateMobile?' up':'';
+	//let typeShow = addMessageState.showTypeList?' active':'';
 		return(
 			<div className="new_message_box panel panel-default" onClick={e=>this.prevent(e)}>
 				<div className="panel-heading">
@@ -20,12 +22,27 @@ class AddMessage extends Component {
 					<form role="form" className="form-horizontal">
 						<div className="form-group">
 							<div className="col-xs-12 input-box" data-error="手机号码不正确" >
-							<input id="userMobile" type="text" className="form-control" value={addMessageState.mobile} placeholder="手机号码" ref="mobileSet" onChange={this.onMobileChange} onBlur={this.onMobileBlur}/>
+							<input id="userMobile" type="text" className="form-control" value={messageInfo.mobile} placeholder="手机号码" ref="mobileSet" onChange={this.onMobileChange} onBlur={this.onMobileBlur}/>
+							</div>
+						</div>
+						<div className="form-group">
+							<div className="col-xs-12 input-box" data-error="配件名称不正确" >
+							<input id="brand" type="text" className="form-control" placeholder="输入车型，如 海格/宇通/金龙"  onChange={this.onBrandChange}/>
+							</div>
+						</div>
+						<div className="form-group">
+							<div className="col-xs-12 input-box" data-error="配件代码不正确" >
+							<input id="goodCode" type="text" className="form-control"placeholder="配件代码" onChange={this.onCodeChange}/>
+							</div>
+						</div>
+						<div className="form-group">
+							<div className="col-xs-12 input-box" data-error="配件名称不正确" >
+							<input id="goodDesc" type="text" className="form-control" placeholder="配件名称" onChange={this.onDescChange}/>
 							</div>
 						</div>
 						<div className="form-group">
 							<div className="col-xs-12 input-box" data-error="至少输入5个字消息">
-							<textarea name="" id="messageContent" ref="contentSet" className="form-control" placeholder="输入消息内容" rows="5" onBlur={this.onContentBlur} onChange={this.onContentChange}></textarea>
+							<textarea name="" id="messageContent" ref="contentSet" className="form-control" placeholder="输入消息内容" rows="3" onBlur={this.onContentBlur} onChange={this.onContentChange}></textarea>
 							</div>
 						</div>
 						<div className="form-group">
@@ -51,9 +68,9 @@ class AddMessage extends Component {
 			)
 	}
 	componentDidMount() {
-		this.addMessageState.mobileSet = this.refs.mobileSet;
-		this.addMessageState.contentSet = this.refs.contentSet;
-		this.addMessageState.getMobileFromCookie()
+		this.store.mobileSet = this.refs.mobileSet;
+		this.store.contentSet = this.refs.contentSet;
+		this.store.getMobileFromCookie()
 	}
 	prevent(e) {
 		if(e.target.id !== 'add_new')
@@ -61,20 +78,33 @@ class AddMessage extends Component {
 	}
 	onMobileChange = (e)=>{
 		e.target.parentNode.classList.remove('has-error')
-		this.addMessageState.mobile = e.target.value
+		this.store.messageInfo.mobile = e.target.value
+	}
+	onMobileChange = (e)=>{
+		e.target.parentNode.classList.remove('has-error')
+		this.store.messageInfo.mobile = e.target.value
+	}
+	onBrandChange = (e)=>{
+		this.store.messageInfo.brand = e.target.value
+	}
+	onCodeChange = (e)=>{
+		this.store.messageInfo.code = e.target.value
+	}
+	onDescChange = (e)=>{
+		this.store.messageInfo.desc = e.target.value
 	}
 	onMobileBlur = (e) => {
-		this.addMessageState.checkMobile(e.target.value)
+		this.store.checkMobile(e.target.value)
 	}
 	onContentChange =(e) => {
 		e.target.parentNode.classList.remove('has-error')
-		this.addMessageState.content = e.target.value
+		this.store.messageInfo.content = e.target.value
 	}
 	setMessageType = (type) => {
-		this.addMessageState.setMessageType(type)
+		this.store.setMessageType(type)
 	}
 	onAddNewOne = (e) => {
-		this.addMessageState.onAddNewOne(e)
+		this.store.onAddNewOne(e)
 	} 
 }
 
