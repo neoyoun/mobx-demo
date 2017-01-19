@@ -104,8 +104,13 @@ body {
 		left:10%;
 		top: 20%;
 		background-color: #fff;
+		.input-area>.row{
+			margin-bottom: 10px;
 
-
+		}
+		label {
+			font-weight: normal;
+		}
 		.input-box.has-error::after{
 			content: attr(data-error);
 			color: #f43;
@@ -113,6 +118,31 @@ body {
 			top:.5em;
 			right: 1.5em;
 		}
+
+		.brand-list{
+			position: absolute;
+			z-index: 1;
+			background-color: #fff;
+			list-style: none;
+			text-align: center;
+			width: 100%;
+			padding: 0;
+			border-left: 1px solid #ccc;
+			border-right: 1px solid #ccc;
+
+			li{
+				font-size: 14px;
+				padding: 6px 12px;
+				width: 100%;
+				line-height: 1.42857;
+				border-bottom:1px solid #ccc;
+			}
+		}
+
+		.form-control {
+			height: auto;
+		}
+
 	}
 	@at-root .messages-list-box {
 		@extend %overlay;

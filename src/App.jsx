@@ -34,7 +34,7 @@ class App extends Component {
         }
         <VisibilityTypeFilter setVisibleType={type=>appState.setVisibleType(type)} />
         {showAddNewBox && 
-          <AddMessage />
+          <AddMessage rememberUser={appState.userMobile}/>
         }
       </div>
     );

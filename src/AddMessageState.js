@@ -1,22 +1,25 @@
 import { observable,computed,autorun,action } from 'mobx';
 const ORIGINURL = module.hot?'http://xaljbbs.com/dist/':'http://bbs.pjsw.cn';
 class AddMessageState {
- // @observable content='';
- // @observable mobile='';
-  //@observable type=10;
+  constructor(){
+    this.offTypeList = ['新件','旧件','拆件'];
+    this.brandList = ['海格','宇通','金龙','申龙','海格','金旅','福田','安凯','中通'];
+  }
   @observable mobileSet = '';
   @observable contentSet = '';
-  //@observable brand = '';
-  //@observable code = '';
-  //@observable desc = '';
   @observable messageInfo = {
-    type:10,
+    type:20,
     mobile:'',
-    brand:'',
+    brand:'海格',
+    offType:'全新件',
     code:'',
     desc:'',
     content:'',
+    count:0,
+    price:0,
   }
+  @observable isShowBrandList = false;
+  @observable isShowContentArea = false;
 
   postMessageUrl = ORIGINURL+'services/insertData.php';
   
@@ -25,7 +28,8 @@ class AddMessageState {
     return mobileTest.test(this.messageInfo.mobile);
   }
   @computed get validateContent() {
-      return this.messageInfo.content.length >= 5
+      //return this.messageInfo.content.length >= 5
+      return true
     }
   @computed get messageTypeName() {
     switch(this.messageInfo.type){

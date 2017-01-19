@@ -18,15 +18,18 @@ class AppState {
   historyDataUrl = `${this.dataUrl}&startIndex=`;
   listeningUrl = `${ORIGINURL}services/loaddata.php?leastId=`;
   
-  @action ('getUserMobile from cookie')
+  
+  @action('get user from cookie')
   getMobileFromCookie() {
+    let userMobile = ''
     let cookies = document.cookie;
     let idx = cookies.indexOf('userMobile');
-    if(idx<0){
-      return '';
-    }else{
-      let mobile = cookies.slice(idx).split('=')[1].split(';')[0].trim();
-      return mobile;
+    if(idx>-1){
+      let cookieMobile = cookies.slice(idx).split('=')[1].split(';')[0].trim();
+      if(cookieMobile && !isNaN(parseInt(cookieMobile,10))){
+        userMobile = parseInt(cookieMobile,10)
+      }
+      return userMobile;
     }
   }
   @action('initial load data')
