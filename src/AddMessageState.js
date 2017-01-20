@@ -7,19 +7,22 @@ class AddMessageState {
   }
   @observable mobileSet = '';
   @observable contentSet = '';
+  @observable errorTip = '';
   @observable messageInfo = {
     type:20,
     mobile:'',
     brand:'海格',
-    offType:'全新件',
+    offType:'新件',
     code:'',
     desc:'',
+    manufacturer:'',
     content:'',
-    count:0,
-    price:0,
+    count:1,
+    price:0.00,
   }
   @observable isShowBrandList = false;
   @observable isShowContentArea = false;
+  @observable isShowErrorTip = false;
 
   postMessageUrl = ORIGINURL+'services/insertData.php';
   
@@ -31,11 +34,42 @@ class AddMessageState {
       //return this.messageInfo.content.length >= 5
       return true
     }
+
   @computed get messageTypeName() {
     switch(this.messageInfo.type){
       case 10: return '求购';
       case 20: return '出售';
     }
+  }
+  @computed get allInputFieldPass(){
+    let result = true;
+    for(let i in this.messageInfo){
+      if(i!='content' && this.messageInfo[i].length == 0){
+        result = false;
+      }else{
+        if(i=='mobile' && !this.validateMobile){
+          result = false;
+        }else if(i=='count' && this.messageInfo[i] <= 0 ){
+          result = false;
+        }else if(i=='price' && this.messageInfo[i]<=0){
+          result = false;
+        }
+      }
+    }
+    return result;
+  }
+  @action ('check input field at blur')
+  checkInput(fieldName, fieldVal){
+    let validateResult = false;
+    switch(fieldName){
+      case 'mobile':
+        validateResult = this.validateMobile;
+        break;
+      default:
+        validateResult = fieldVal.length >=1;
+      break;
+    }
+    return validateResult;
   }
   @action ('getUserMobile from cookie')
   getMobileFromCookie() {
@@ -48,26 +82,15 @@ class AddMessageState {
       }
     }
   }
-  @action checkMobile(value) {
-    if(!value) return false;
-    this.messageInfo.mobile = value
-      if(!this.validateMobile){
-        this.mobileSet.parentNode.classList.add('has-error')
-      }
-    }
-  @action setMessageType(type){
-    this.messageInfo.type = type;
-  }
   @action('add message to database') 
   onAddNewOne(e){
-    if(!this.validateMobile){
-      this.mobileSet.parentNode.classList.add('has-error')
-    }
-    if(!this.validateContent){
-      this.contentSet.parentNode.classList.add('has-error')
-    }
-    if(!(this.validateMobile && this.validateContent)){
-      e.stopPropagation()
+    if(!this.allInputFieldPass){
+      for(let i in this.messageInfo){
+        console.log(i+' is '+ this.messageInfo[i])
+      }
+      this.errorTip = '信息输入不完整或有错误，请返回修改！'
+      this.isShowErrorTip = true;
+      e.stopPropagation();
       return false;
     }
     let data = Object.assign({},this.messageInfo);

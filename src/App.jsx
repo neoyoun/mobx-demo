@@ -6,6 +6,7 @@ import DevTools from 'mobx-react-devtools';
 import LoadingMask from 'components/LoadingMask';
 import VisibilityTypeFilter from 'components/VisibilityTypeFilter';
 import MessagesList from 'components/MessagesList';
+import MessageDetail from 'components/MessageDetail';
 import AddMessage from 'components/AddMessage';
 import UnreadTips from 'components/UnreadTips';
 @observer
@@ -15,7 +16,7 @@ class App extends Component {
   }
   render() {
     const appState = this.props.appState
-    const {showAddNewBox,showTypeFilter,hasUnread,loading,toggleAddBox} = appState
+    const {showAddNewBox,showTypeFilter,hasUnread,loading,toggleAddBox,isShowMessageDetail,messageDetailShowing} = appState
     return (
       <div className='main-container' onClick={e=>this.hidePopupLayer(e)}>
       {module.hot &&  <DevTools /> }
@@ -27,8 +28,9 @@ class App extends Component {
           <span className="btn btn-warning add-btn" onClick={ e =>appState.toggleAddBox(e)}>发布</span>
         </nav>
         <div className="messages-list-box" ref="messageBox" onTouchEnd={e=>this.onTouchEndHandle(e)} onWheel={e=>this.onMessagesBoxWheel(e)}>
-        <MessagesList messages={appState.showingMessages} userMobile={appState.userMobile}/>
+        <MessagesList setVisibleMessageFromList={appState.setVisibleMessage} messages={appState.visibilityMessageList} userMobile={appState.userMobile}/>
         </div>
+        {isShowMessageDetail && messageDetailShowing && <MessageDetail message={messageDetailShowing} />}
         {hasUnread && 
           <UnreadTips clickHandle={this.onRunToButtom}/>
         }

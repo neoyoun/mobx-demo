@@ -13,6 +13,8 @@ class AppState {
   @observable leastId = 0;
   @observable totalHeight =0;
   @observable hasUnread = false;
+  @observable isShowMessageDetail = true;
+  @observable showingMessageId = 268;
   loadCount = 20;
   dataUrl = `${ORIGINURL}services/loaddata.php?amount=${this.loadCount}`;
   historyDataUrl = `${this.dataUrl}&startIndex=`;
@@ -99,12 +101,16 @@ class AppState {
     e.stopPropagation()
     this.showAddNewBox = !this.showAddNewBox;
   }
-  @action hidePopupLayer() {
+  @action ('hide modal')
+  hidePopupLayer() {
     if(this.showTypeFilter){
       this.showTypeFilter= false;
     }
     if(this.showAddNewBox){
       this.showAddNewBox= false;
+    }
+    if(this.isShowMessageDetail){
+      this.isShowMessageDetail = false;
     }
   }
   @action setVisibleType(type) {
@@ -202,12 +208,29 @@ class AppState {
       case 20: return '实时出售信息'
     }
   }
-  @computed get showingMessages() {
+  @computed get visibilityMessageList() {
     if(this.messageType == 0){
       return this.data
     }else{
       return this.data.filter(item=>item.type == this.messageType)
     }
+  }
+  @action ('set visible message id')
+    setVisibleMessage(id) {
+      this.showingMessageId = id;
+      this.isShowMessageDetail = true;
+    }
+  @computed get messageDetailShowing() {
+    let fetchData = {};
+    if(this.data.length > 0){
+      try {
+        let detailMessageArr = this.data.filter(message=>message.id == this.showingMessageId);
+        fetchData = detailMessageArr[0];
+      }catch(err){
+        fetchData = {}
+      }
+    }
+    return fetchData
   }
 }
 

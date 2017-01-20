@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
 import { observer } from 'mobx-react';
 import AddMessageState from '../AddMessageState';
+import PopupModal from './PopupModal';
 @observer
 class AddMessage extends Component {
 	constructor(){
@@ -8,9 +9,10 @@ class AddMessage extends Component {
 		this.store = new AddMessageState();
 	}
 	render() {
-	let {messageInfo,isShowBrandList,isShowOffTypeList,isShowContentArea,offTypeList,brandList} = this.store;
+	const {messageInfo,isShowErrorTip,errorTip,isShowBrandList,isShowOffTypeList,isShowContentArea,offTypeList,brandList} = this.store;
 		return(
 			<div className="new_message_box panel panel-default" onClick={e=>this.prevent(e)}>
+				{isShowErrorTip && <PopupModal text={errorTip} />}
 				<div className="panel-heading">
 					<div className="panel-title text-center">尾货处理发布</div>
 				</div>
@@ -19,7 +21,7 @@ class AddMessage extends Component {
 						<div className="col-xs-12">
 							<div className="input-group input-box" data-error="手机号码不正确">
 							<span className="input-group-addon">联系方式</span>
-							<input id="userMobile" type="text" className="form-control" value={messageInfo.mobile} placeholder="输入手机号码" ref="mobileSet" onChange={this.onMobileChange} onBlur={this.onMobileBlur}/>
+							<input name="mobile" type="text" className="form-control" value={messageInfo.mobile} placeholder="输入手机号码" ref="mobileSet" onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
 							</div>
 						</div>
 					</div>
@@ -32,7 +34,7 @@ class AddMessage extends Component {
 									</button>
 									{isShowBrandList &&
 									<ul className="brand-list">
-										{brandList.map((brand, idx)=><li key={idx} onClick={()=>this.onBrandChange(brand)}>{brand}</li>)}
+										{brandList.map((brand, idx)=><li key={'brand_'+idx} onClick={()=>this.onBrandChange(brand)}>{brand}</li>)}
 									</ul>
 									 }
 								</div>
@@ -42,49 +44,63 @@ class AddMessage extends Component {
 					</div>
 					<div className="row">
 						<div className="col-xs-12">
-							<div className="input-group">
+							<div className="input-group input-box" data-error="不能为空">
 								<span className="input-group-addon">配件代码</span>
-								<input id="goodCode" type="text" className="form-control"placeholder="配件代码(可选)" value={messageInfo.code} onChange={this.onCodeChange} required/>
+								<input name="code" type="text" className="form-control"placeholder="请输入主机厂零件号" value={messageInfo.code}  onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
 							</div>
-							</div>
+						</div>
 					</div>
 					<div className="row">
 						<div className="col-xs-12">
-							<div className="input-group">
+							<div className="input-group input-box" data-error="不能为空">
 							<span className="input-group-addon">配件名称</span>
-								<input id="goodDesc" type="text" className="form-control" placeholder="配件名称(可选)" value={messageInfo.desc} onChange={this.onDescChange} required/>
+								<input name="desc" type="text" className="form-control" placeholder="请输入零件名" value={messageInfo.desc}  onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
 							</div>
 						</div>
 					</div>
 					<div className="row">
 						<div className="col-xs-12">
-							<div className="input-group">
-							<span className="input-group-addon">配件价格</span>
-								<input id="goodPrice" key="goodPrice" type="number" className="form-control" onChange={this.onPriceChange} required/>
+							<div className="input-group input-box" data-error="不能为空">
+							<span className="input-group-addon">处理价格</span>
+								<input name="price" type="number" className="form-control" value={messageInfo.price} onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
 							</div>
 						</div>
 					</div>
 					<div className="row">
 						<div className="col-xs-12">
-							<div className="input-group">
+							<div className="input-group input-box" data-error="不能为空">
 							<span className="input-group-addon">处理数量</span>
-								<input id="goodCount" key="goodCount" type="number" className="form-control" onChange={this.onCountChange}/>
+								<input name="count" type="number" className="form-control" value={messageInfo.count} onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
+							</div>
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-xs-12">
+							<div className="input-group input-box" data-error="不能为空">
+							<span className="input-group-addon">厂家品牌</span>
+								<input name="manufacturer" key="goodCount" type="text" className="form-control" onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
 							</div>
 						</div>
 					</div>
 					{isShowContentArea &&
 					<div className="row">
-						<div className="col-xs-12 input-box" data-error="至少输入5个字消息">
-							<textarea name="" id="messageContent" ref="contentSet" className="form-control" placeholder="输入消息内容" rows="3" onBlur={this.onContentBlur} onChange={this.onContentChange}></textarea>
+						<div className="col-xs-12 input-box" data-error="至少输入5个字">
+							<textarea name="content" id="messageContent" ref="contentSet" className="form-control" placeholder="输入消息内容" rows="3" onBlur={this.onContentBlur} onChange={this.onInputFieldChange}></textarea>
 						</div>
 					</div>
 					}
 
 					<div className="row">
 						{offTypeList.map((offType, idx)=>{
-							return (<div className="col-xs-3" onClick={()=>this.onOffTypeChange(offType)}>
+							return (<div className="col-xs-3" key={'offtype_'+idx} onClick={()=>this.onOffTypeChange(offType)}>
 								<label>
-								    <input type="radio" name="good_off_type" />{offType}
+									{ offType == messageInfo.offType &&
+										<input type="radio" defaultChecked name="offType" />
+									}
+									{ offType != messageInfo.offType &&
+										<input type="radio" name="offType" />
+									}
+									{offType}
 								</label>
 						</div>)
 						})}
@@ -112,16 +128,35 @@ class AddMessage extends Component {
 		this.store.getMobileFromCookie()
 	}
 	prevent(e) {
-		if(e.target.id !== 'add_new')
-		e.stopPropagation()
+		// 阻止冒泡隐藏 modal 层
+		if(e.target.id !== 'add_new'){
+			e.stopPropagation()
+		}
+		this.store.isShowErrorTip = false;
 	}
-	onMobileChange = (e)=>{
+	onInputFieldChange = (e)=>{
 		e.target.parentNode.classList.remove('has-error')
-		this.store.messageInfo.mobile = e.target.value
+		this.store.isShowErrorTip = false;
+		let fieldName = e.target.name;
+		let fieldVal = e.target.value;
+		switch(fieldName){
+			case 'price':
+				this.store.messageInfo.price = Math.round(parseFloat(fieldVal)*100)/100;
+			break;
+			case 'count':
+				this.store.messageInfo.count = +fieldVal;
+			break;
+			default:
+				this.store.messageInfo[''+fieldName] = fieldVal
+		}
 	}
-	onMobileChange = (e)=>{
-		e.target.parentNode.classList.remove('has-error')
-		this.store.messageInfo.mobile = e.target.value
+	onInputFieldBlur = (e) => {
+		let fieldName = e.target.name;
+		let fieldVal = e.target.value;
+		let isCorrect = this.store.checkInput(''+fieldName, fieldVal)
+		if(!isCorrect){
+			e.target.parentNode.classList.add('has-error')
+		}
 	}
 	onBrandChange = (val)=>{
 		this.store.messageInfo.brand = val
@@ -131,24 +166,8 @@ class AddMessage extends Component {
 		this.store.messageInfo.offType = val
 		this.store.isShowOffTypeList = false;
 	}
-	onCodeChange = (e)=>{
-		this.store.messageInfo.code = e.target.value
-	}
-	onDescChange = (e)=>{
-		this.store.messageInfo.desc = e.target.value
-	}
-	onPriceChange = (e)=>{
-		this.store.messageInfo.price = e.target.value
-	}
-	onCountChange = (e)=>{
-		this.store.messageInfo.count = e.target.value
-	}
 	onMobileBlur = (e) => {
 		this.store.checkMobile(e.target.value)
-	}
-	onContentChange =(e) => {
-		e.target.parentNode.classList.remove('has-error')
-		this.store.messageInfo.content = e.target.value
 	}
 	toggleBrandListShow = () => {
 		this.store.isShowBrandList = !this.store.isShowBrandList

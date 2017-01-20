@@ -1,4 +1,4 @@
-@import "mixin" , "variable","placeholder";
+@import "mixin" ,"placeholder";
 html{
 	height: 100%;
 	overflow: hidden;
@@ -99,14 +99,41 @@ body {
 		padding: 6px 12px;
 	}
 	.new_message_box{
-		position:absolute;
-		width:80%;
-		left:10%;
-		top: 20%;
-		background-color: #fff;
+		@extend %popupmodal-bg;
+
+		@at-root .popup-modal {
+			position: fixed;
+			top: 4em;
+			font-size: 12px;
+			z-index: 3;
+			padding: 8px 16px;
+			width: 50vw;
+			left: 25vw;
+			min-height: 3em;
+			background-color: #fafafa;
+			border-radius: 3px;
+			border: 1px solid #d8d8d8;
+			text-align: center;
+			animation:dropDownLinear .3s;
+			box-shadow: 0 0 3px 1px #ccc;
+
+			@keyframes dropDownLinear{
+				0% {transform:rotate(-10deg)}
+				10% {transform:rotate(5deg)}
+				20% {transform:rotate(-8deg)}
+				30% {transform:rotate(6deg)}
+				40% {transform:rotate(-6deg)}
+				50% {transform:rotate(5deg)}
+				60% {transform:rotate(4deg)}
+				70% {transform:rotate(-3deg)}
+				80% {transform:rotate(3deg)}
+				90% {transform:rotate(-2deg)}
+				100% {transform:rotate(0deg)}
+			}
+
+		}
 		.input-area>.row{
 			margin-bottom: 10px;
-
 		}
 		label {
 			font-weight: normal;
@@ -115,8 +142,9 @@ body {
 			content: attr(data-error);
 			color: #f43;
 			position: absolute;
+			z-index: 2;
 			top:.5em;
-			right: 1.5em;
+			right: .5em;
 		}
 
 		.brand-list{
@@ -180,6 +208,12 @@ body {
 				}
 			}
 		}
+
+
+	}
+	.message-detail-box {
+		@extend %popupmodal-bg;
+		
 	}
 
 	.filter-box {
