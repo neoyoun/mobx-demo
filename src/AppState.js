@@ -1,9 +1,9 @@
 import { observable,computed,autorun,action } from 'mobx';
-const ORIGINURL = module.hot?'http://xaljbbs.com/dist/':'http://bbs.pjsw.cn';
+const ORIGINURL = module.hot?'http://xaljbbs.com/':'/';
 
 class AppState {
   @observable showTypeFilter = false;
-  @observable showAddNewBox = false;
+  @observable isShowAddNewBox = false;
   @observable messageType = 0;
   @observable userMobile = '';
   @observable loading = true;
@@ -13,9 +13,15 @@ class AppState {
   @observable leastId = 0;
   @observable totalHeight =0;
   @observable hasUnread = false;
-  @observable isShowMessageDetail = true;
-  @observable showingMessageId = 268;
+  @observable isShowMessageDetail = false;
+  @observable showingMessageId = 0;
+  @observable filterOption = {
+    brand:'',
+    offType:''
+  }
   loadCount = 20;
+  offTypeList = ['新件','旧件','拆件'];
+  brandList = ['海格','宇通','金龙','申龙','海格','金旅','福田','安凯','中通'];
   dataUrl = `${ORIGINURL}services/loaddata.php?amount=${this.loadCount}`;
   historyDataUrl = `${this.dataUrl}&startIndex=`;
   listeningUrl = `${ORIGINURL}services/loaddata.php?leastId=`;
@@ -41,19 +47,23 @@ class AppState {
     fetch(getDataReq)
     .then(res => res.json())
     .then(action(json => {
-      this.data = json.messages;
-      this.leastId = json.leastId;
-      this.userMobile = this.getMobileFromCookie();
-      if(json.length < this.loadCount){
-        this.hasHistoryMessage = false;
+      if(json.length > 0){
+        this.data = json.messages;
+        this.leastId = json.leastId;
+        this.userMobile = this.getMobileFromCookie();
+        if(json.length < this.loadCount){
+          this.hasHistoryMessage = false;
+        }
+        setTimeout(function () {
+          self.scrollMessageBox();
+        }, 100)
+      }else {
+        this.hasHistoryMessage= false;
       }
       this.loading = false;
       setTimeout(function () {
-        self.scrollMessageBox();
-      }, 100)
-      setTimeout(function () {
-        self.listeningData()
-      }, 500)
+          self.listeningData()
+        }, 500)
     }))
     .catch(e => {console.error('fetch error>>'+e);})
   }
@@ -99,15 +109,16 @@ class AppState {
   }
   @action toggleAddBox(e) {
     e.stopPropagation()
-    this.showAddNewBox = !this.showAddNewBox;
+    this.isShowAddNewBox = !this.isShowAddNewBox;
+    this.isShowMessageDetail = false;
   }
   @action ('hide modal')
   hidePopupLayer() {
     if(this.showTypeFilter){
       this.showTypeFilter= false;
     }
-    if(this.showAddNewBox){
-      this.showAddNewBox= false;
+    if(this.isShowAddNewBox){
+      this.isShowAddNewBox= false;
     }
     if(this.isShowMessageDetail){
       this.isShowMessageDetail = false;
@@ -208,18 +219,39 @@ class AppState {
       case 20: return '实时出售信息'
     }
   }
+  @action ('setVisibleBrand')
+  setVisibleBrand(brand){
+    this.filterOption.brand = brand || '';
+  }
+  @action ('setVisibleOffType')
+  setVisibleOffType(offType){
+    this.filterOption.offType = offType || '';
+  }
   @computed get visibilityMessageList() {
-    if(this.messageType == 0){
-      return this.data
-    }else{
-      return this.data.filter(item=>item.type == this.messageType)
+    let filterResultList = [];
+    let filter = this.filterOption
+    if(!filter.brand && !filter.offType ){
+      filterResultList = this.data
+    }else {
+      if(filter.brand.length > 0){
+        filterResultList = this.data.filter(item=>item.brand == filter.brand)
+      }else{
+        filterResultList = this.data
+      }
+       if(filter.offType.length > 0){
+        filterResultList = filterResultList.filter(item=>item.offType == filter.offType)
+      }
+      let filterBrand = this.data.filter
     }
+    return filterResultList;
   }
   @action ('set visible message id')
-    setVisibleMessage(id) {
+  setVisibleMessage(id) {
+    if(id != undefined){
       this.showingMessageId = id;
       this.isShowMessageDetail = true;
-    }
+    } 
+  }
   @computed get messageDetailShowing() {
     let fetchData = {};
     if(this.data.length > 0){

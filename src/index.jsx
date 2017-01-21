@@ -6,20 +6,20 @@ import App from './App';
 
 //window.appState = appState;
 const appState = new AppState();
-window.appState = appState;
 render(
   <AppContainer>
-    <App appState={appState}/>
+    <App store={appState}/>
   </AppContainer>,
   document.getElementById('root')
 );
 
 if (module.hot) {
+  window.appState = appState;
   module.hot.accept('./App', () => {
     const NextApp = require('./App').default;
     render(
       <AppContainer>
-        <NextApp appState={appState}/>
+        <NextApp store={appState}/>
       </AppContainer>,
       document.getElementById('root')
     );

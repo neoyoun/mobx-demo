@@ -11,57 +11,54 @@ import AddMessage from 'components/AddMessage';
 import UnreadTips from 'components/UnreadTips';
 @observer
 class App extends Component {
-  constructor(props){
-    super(props)
-  }
   render() {
-    const appState = this.props.appState
-    const {showAddNewBox,showTypeFilter,hasUnread,loading,toggleAddBox,isShowMessageDetail,messageDetailShowing} = appState
+    const store = this.props.store
     return (
-      <div className='main-container' onClick={e=>this.hidePopupLayer(e)}>
+      <div className='main-container' onClick={(e)=>this.hidePopupLayer(e)}>
       {module.hot &&  <DevTools /> }
-        {loading && 
+        {store.loading && 
           <LoadingMask />
         }
         <nav className="page-title panel-default">
-          <div className="panel-heading">{appState.pageTitle}</div>
-          <span className="btn btn-warning add-btn" onClick={ e =>appState.toggleAddBox(e)}>发布</span>
+          <div className="panel-heading">{store.pageTitle}</div>
+         <span className="btn btn-warning add-btn" onClick={ e =>store.toggleAddBox(e)}>发布</span>
         </nav>
         <div className="messages-list-box" ref="messageBox" onTouchEnd={e=>this.onTouchEndHandle(e)} onWheel={e=>this.onMessagesBoxWheel(e)}>
-        <MessagesList setVisibleMessageFromList={appState.setVisibleMessage} messages={appState.visibilityMessageList} userMobile={appState.userMobile}/>
-        </div>
-        {isShowMessageDetail && messageDetailShowing && <MessageDetail message={messageDetailShowing} />}
-        {hasUnread && 
+        <MessagesList setVisibleMessage={(id)=>this.onSetVisibleMessage(id)} messages={store.visibilityMessageList} userMobile={store.userMobile}/>
+        {store.hasUnread && 
           <UnreadTips clickHandle={this.onRunToButtom}/>
         }
-        <VisibilityTypeFilter setVisibleType={type=>appState.setVisibleType(type)} />
-        {showAddNewBox && 
-          <AddMessage rememberUser={appState.userMobile}/>
-        }
+        </div>
+        <VisibilityTypeFilter setVisibleType={type=>store.setVisibleType(type)} brandList={store.brandList} offTypeList={store.offTypeList}/>
+        {store.isShowMessageDetail && store.messageDetailShowing && <MessageDetail message={store.messageDetailShowing} />}
+        <AddMessage rememberUser={store.userMobile} isShow={store.isShowAddNewBox}/>
       </div>
     );
   }
   componentDidMount() {
     let messageBox = this.refs.messageBox;
-    let appState = this.props.appState;
-    appState.rollBox = messageBox;
-    appState.initialLoad();
+    let store = this.props.store;
+    store.rollBox = messageBox;
+    store.initialLoad();
   }
   hidePopupLayer(e){
     e.stopPropagation()
-    this.props.appState.hidePopupLayer()
+    this.props.store.hidePopupLayer()
   }
   onMessagesBoxWheel(e){
     e.stopPropagation()
-    this.props.appState.onMessagesBoxWheel(e)
+    this.props.store.onMessagesBoxWheel(e)
   }
   onTouchEndHandle(e) {
     e.stopPropagation()
-    this.props.appState.onMessagesBoxWheel(e)
+    this.props.store.onMessagesBoxWheel(e)
+  }
+  onSetVisibleMessage(id) {
+    this.props.store.setVisibleMessage(id)
   }
   onRunToButtom = (e) => {
     e.stopPropagation()
-    this.props.appState.runToBottom();
+    this.props.store.runToBottom();
   }
 };
 

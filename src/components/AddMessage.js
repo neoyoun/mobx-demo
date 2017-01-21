@@ -10,8 +10,9 @@ class AddMessage extends Component {
 	}
 	render() {
 	const {messageInfo,isShowErrorTip,errorTip,isShowBrandList,isShowOffTypeList,isShowContentArea,offTypeList,brandList} = this.store;
+	const {rememberUser, isShow} = this.props;
 		return(
-			<div className="new_message_box panel panel-default" onClick={e=>this.prevent(e)}>
+			<div className="new_message_box panel panel-default" style={{display:isShow?'':'none'}} onClick={e=>this.prevent(e)}>
 				{isShowErrorTip && <PopupModal text={errorTip} />}
 				<div className="panel-heading">
 					<div className="panel-title text-center">尾货处理发布</div>
@@ -92,7 +93,7 @@ class AddMessage extends Component {
 
 					<div className="row">
 						{offTypeList.map((offType, idx)=>{
-							return (<div className="col-xs-3" key={'offtype_'+idx} onClick={()=>this.onOffTypeChange(offType)}>
+							return (<div className="col-xs-4" key={'offtype_'+idx} onClick={()=>this.onOffTypeChange(offType)}>
 								<label>
 									{ offType == messageInfo.offType &&
 										<input type="radio" defaultChecked name="offType" />
@@ -104,18 +105,11 @@ class AddMessage extends Component {
 								</label>
 						</div>)
 						})}
-						{/*<div className="col-xs-4" onClick={()=>this.store.setMessageType(10)}>
-								<label>
-								    <input type="radio" name="message_type" value="10" />求购
-								</label>
-						</div>
-						<div className="col-xs-4" onClick={()=>this.store.setMessageType(20)}>
-							<label>
-							    <input type="radio" name="message_type" value="20" defaultChecked/>出售
-							</label>
-						</div>*/}
-						<div className="col-xs-3 text-right">
-							<button type="button" id="add_new" onClick={(e)=>this.store.onAddNewOne(e)} className="btn btn-success">发布</button>
+						
+					</div>
+					<div className="row">
+						<div className="col-xs-12">
+							<button type="button" id="add_new" onClick={(e)=>this.store.onAddNewOne(e)} className="btn btn-block btn-success">发布</button>
 						</div>
 					</div>
 				</div>

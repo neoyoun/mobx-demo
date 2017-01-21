@@ -100,6 +100,7 @@ body {
 	}
 	.new_message_box{
 		@extend %popupmodal-bg;
+		top:3rem;
 
 		@at-root .popup-modal {
 			position: fixed;

@@ -1,5 +1,5 @@
 import { observable,computed,autorun,action } from 'mobx';
-const ORIGINURL = module.hot?'http://xaljbbs.com/dist/':'http://bbs.pjsw.cn';
+const ORIGINURL = module.hot?'http://xaljbbs.com/':'/';
 class AddMessageState {
   constructor(){
     this.offTypeList = ['新件','旧件','拆件'];
