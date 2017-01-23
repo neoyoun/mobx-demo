@@ -1,5 +1,3 @@
-require('bootstrap-loader');
-require('./scss/main.scss');
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
@@ -29,9 +27,9 @@ class App extends Component {
           <UnreadTips clickHandle={this.onRunToButtom}/>
         }
         </div>
-        <VisibilityTypeFilter setVisibleType={type=>store.setVisibleType(type)} brandList={store.brandList} offTypeList={store.offTypeList}/>
+        <VisibilityTypeFilter setVisibleBrand={type=>store.setVisibleBrand(type)}  setVisibleOffType={type=>store.setVisibleOffType(type)} filterOption={store.filterOption} brandList={store.brandList} offTypeList={store.offTypeList} onToggleBrandFilter={this.onToggleBrandFilter} onToggleOffTypeFilter={this.onToggleOffTypeFilter}/>
         {store.isShowMessageDetail && store.messageDetailShowing && <MessageDetail message={store.messageDetailShowing} />}
-        <AddMessage rememberUser={store.userMobile} isShow={store.isShowAddNewBox}/>
+        <AddMessage addMessageStore={store.addMessageStore} isShow={store.isShowAddNewBox} brandList={store.brandList} offTypeList={store.offTypeList}/>
       </div>
     );
   }
@@ -60,6 +58,16 @@ class App extends Component {
     e.stopPropagation()
     this.props.store.runToBottom();
   }
+
+  onToggleBrandFilter = (e)=>{
+    e.stopPropagation()
+    this.props.store.toggleBrandFilter();
+  }
+  onToggleOffTypeFilter = (e)=>{
+    e.stopPropagation()
+    this.props.store.toggleOffTypeFilter();
+  }
+
 };
 
 export default App;

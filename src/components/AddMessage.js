@@ -1,16 +1,16 @@
 import React,{Component} from 'react'
 import { observer } from 'mobx-react';
-import AddMessageState from '../AddMessageState';
 import PopupModal from './PopupModal';
 @observer
 class AddMessage extends Component {
-	constructor(){
-		super()
-		this.store = new AddMessageState();
+	constructor(props){
+		super(props)
+		//this.store = new AddMessageState();
+		this.store = this.props.addMessageStore;
 	}
 	render() {
-	const {messageInfo,isShowErrorTip,errorTip,isShowBrandList,isShowOffTypeList,isShowContentArea,offTypeList,brandList} = this.store;
-	const {rememberUser, isShow} = this.props;
+	const {messageInfo,isShowErrorTip,errorTip,isShowBrandList,isShowOffTypeList,isShowContentArea} = this.store;
+	const {rememberUser, isShow, brandList, offTypeList} = this.props;
 		return(
 			<div className="new_message_box panel panel-default" style={{display:isShow?'':'none'}} onClick={e=>this.prevent(e)}>
 				{isShowErrorTip && <PopupModal text={errorTip} />}
@@ -79,7 +79,7 @@ class AddMessage extends Component {
 						<div className="col-xs-12">
 							<div className="input-group input-box" data-error="不能为空">
 							<span className="input-group-addon">厂家品牌</span>
-								<input name="manufacturer" key="goodCount" type="text" className="form-control" onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
+								<input name="manufacturer" key="goodCount" type="text" className="form-control" value={messageInfo.manufacturer} onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
 							</div>
 						</div>
 					</div>

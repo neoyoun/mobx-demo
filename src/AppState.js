@@ -1,8 +1,9 @@
 import { observable,computed,autorun,action } from 'mobx';
+import AddMessageState from './AddMessageState';
 const ORIGINURL = module.hot?'http://xaljbbs.com/':'/';
-
+const addMessageStore = new AddMessageState;
 class AppState {
-  @observable showTypeFilter = false;
+  
   @observable isShowAddNewBox = false;
   @observable messageType = 0;
   @observable userMobile = '';
@@ -17,11 +18,14 @@ class AppState {
   @observable showingMessageId = 0;
   @observable filterOption = {
     brand:'',
-    offType:''
+    offType:'',
+    isShowBrandFilter:false,
+    isShowOffTypeFilter:false
   }
+  addMessageStore = addMessageStore;
   loadCount = 20;
   offTypeList = ['新件','旧件','拆件'];
-  brandList = ['海格','宇通','金龙','申龙','海格','金旅','福田','安凯','中通'];
+  brandList = ['海格客车','宇通客车','金龙客车','申龙客车','金旅客车','福田客车','安凯客车','中通客车'];
   dataUrl = `${ORIGINURL}services/loaddata.php?amount=${this.loadCount}`;
   historyDataUrl = `${this.dataUrl}&startIndex=`;
   listeningUrl = `${ORIGINURL}services/loaddata.php?leastId=`;
@@ -103,32 +107,35 @@ class AppState {
     xhr.open('GET',targetUrl);
     xhr.send()
   }
-  @action toggleTypeFilter(e) {
-    e.stopPropagation()
-    this.showTypeFilter = !this.showTypeFilter;
+  @action ('toggle brand filter')
+  toggleBrandFilter() {
+    this.filterOption.isShowBrandFilter = !this.filterOption.isShowBrandFilter;
+    this.hidePopupLayer('brand')
+  }
+  @action ('toggle offtype filter')
+  toggleOffTypeFilter() {
+    this.filterOption.isShowOffTypeFilter = !this.filterOption.isShowOffTypeFilter;
+    this.hidePopupLayer('offType')
   }
   @action toggleAddBox(e) {
     e.stopPropagation()
     this.isShowAddNewBox = !this.isShowAddNewBox;
-    this.isShowMessageDetail = false;
+    this.hidePopupLayer('addBox')
   }
   @action ('hide modal')
-  hidePopupLayer() {
-    if(this.showTypeFilter){
-      this.showTypeFilter= false;
-    }
-    if(this.isShowAddNewBox){
+  hidePopupLayer(box) {
+    if(box != 'addBox' && this.isShowAddNewBox){
       this.isShowAddNewBox= false;
     }
     if(this.isShowMessageDetail){
       this.isShowMessageDetail = false;
     }
-  }
-  @action setVisibleType(type) {
-    if(type != this.messageType){
-     this.messageType = type;
-     this.runToBottom() 
-   }
+    if(box != 'brand' && this.filterOption.isShowBrandFilter){
+      this.filterOption.isShowBrandFilter = false
+    }
+    if(box != 'offType' && this.filterOption.isShowOffTypeFilter){
+      this.filterOption.isShowOffTypeFilter = false
+    }
   }
   @action('auto scroll the messagesBox') 
   scrollMessageBox() {
@@ -213,19 +220,25 @@ class AppState {
     return curTop>=maxTop;
   }
   @computed get pageTitle() {
-    switch(this.messageType) {
-      case 0: return '实时交易信息'
-      case 10: return '实时求购信息'
-      case 20: return '实时出售信息'
+    let pageTitle = '尾货处理信息';
+    let brand = this.filterOption.brand;
+    let offType = this.filterOption.offType;
+    if(brand.length>0 && offType.length>0){
+      pageTitle = `${brand}${offType}信息`
+    }else if(brand.length>0 || offType.length>0){
+      pageTitle = (brand || offType) + '尾货信息';
     }
+    return pageTitle
   }
-  @action ('setVisibleBrand')
+  @action ('set Visible Brand')
   setVisibleBrand(brand){
     this.filterOption.brand = brand || '';
+    this.runToBottom()
   }
-  @action ('setVisibleOffType')
+  @action ('set Visible OffType')
   setVisibleOffType(offType){
     this.filterOption.offType = offType || '';
+    this.runToBottom() 
   }
   @computed get visibilityMessageList() {
     let filterResultList = [];
@@ -245,7 +258,7 @@ class AppState {
     }
     return filterResultList;
   }
-  @action ('set visible message id')
+  @action ('set visible message detail')
   setVisibleMessage(id) {
     if(id != undefined){
       this.showingMessageId = id;

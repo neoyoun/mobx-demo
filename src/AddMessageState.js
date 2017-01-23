@@ -1,24 +1,20 @@
 import { observable,computed,autorun,action } from 'mobx';
 const ORIGINURL = module.hot?'http://xaljbbs.com/':'/';
 class AddMessageState {
-  constructor(){
-    this.offTypeList = ['新件','旧件','拆件'];
-    this.brandList = ['海格','宇通','金龙','申龙','海格','金旅','福田','安凯','中通'];
-  }
   @observable mobileSet = '';
   @observable contentSet = '';
   @observable errorTip = '';
   @observable messageInfo = {
     type:20,
     mobile:'',
-    brand:'海格',
+    brand:'海格客车',
     offType:'新件',
+    count:1,
+    price:0.00,
     code:'',
     desc:'',
     manufacturer:'',
     content:'',
-    count:1,
-    price:0.00,
   }
   @observable isShowBrandList = false;
   @observable isShowContentArea = false;
@@ -108,7 +104,13 @@ class AddMessageState {
         }
       })
       .catch(err=>console.error(`fetch fail:${err}`))
-     this.content = '';
+     Object.assign(this.messageInfo,{
+      count:1,
+      price:0.00,
+      code:'',
+      desc:'',
+      manufacturer:'',
+     })
      this.rememberUser()
   }
   @action('set user mobile to cookie')

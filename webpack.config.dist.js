@@ -4,7 +4,7 @@ let path = require('path');
 let ExtractTextPlugin = require("extract-text-webpack-plugin");
 let srcPath = path.resolve(__dirname,'./src');
 module.exports = {
-	entry: ['whatwg-fetch',srcPath+'/index.jsx'],
+	entry: ['whatwg-fetch',srcPath+'/index'],
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: 'bundle.js',
@@ -61,7 +61,7 @@ module.exports = {
     				drop_console: true
 				}
 			}),
-		new ExtractTextPlugin("[name].css"),
+		new ExtractTextPlugin("build.css"),
 	    new webpack.NoErrorsPlugin()
 		]
 }
