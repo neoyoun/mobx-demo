@@ -93,7 +93,7 @@ class AddMessage extends Component {
 
 					<div className="row">
 						{offTypeList.map((offType, idx)=>{
-							return (<div className="col-xs-4" key={'offtype_'+idx} onClick={()=>this.onOffTypeChange(offType)}>
+							return (<div className="col-xs-4 offtype-item" key={'offtype_'+idx} onClick={()=>this.onOffTypeChange(offType)}>
 								<label>
 									{ offType == messageInfo.offType &&
 										<input type="radio" defaultChecked name="offType" />

@@ -24,7 +24,7 @@ class AppState {
   }
   addMessageStore = addMessageStore;
   loadCount = 20;
-  offTypeList = ['新件','旧件','拆件'];
+  offTypeList = ['全新件','库存件','拆车件'];
   brandList = ['海格客车','宇通客车','金龙客车','申龙客车','金旅客车','福田客车','安凯客车','中通客车'];
   dataUrl = `${ORIGINURL}services/loaddata.php?amount=${this.loadCount}`;
   historyDataUrl = `${this.dataUrl}&startIndex=`;

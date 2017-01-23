@@ -172,6 +172,11 @@ body {
 			height: auto;
 		}
 
+		.offtype-item{
+			padding-left: 5px;
+			padding-right: 5px;
+		}
+
 	}
 	@at-root .messages-list-box {
 		@extend %overlay;
@@ -214,6 +219,20 @@ body {
 	}
 	.message-detail-box {
 		@extend %popupmodal-bg;
+
+		.close-btn {
+			position: absolute;
+			display: block;
+			width: 20px;
+			height: 20px;
+			line-height: 20px;
+			right: .5em;
+			top: .5em;
+			border-radius: 20px;
+			border:1px solid #d8d8d8;
+			color: #333;
+			box-shadow: 0px 1px #d5d5d5;
+		}
 		
 	}
 
