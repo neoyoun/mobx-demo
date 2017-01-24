@@ -8,7 +8,7 @@ class AddMessageState {
     type:20,
     mobile:'',
     brand:'海格客车',
-    offType:'新件',
+    offType:'全新件',
     count:1,
     price:0.00,
     code:'',
@@ -117,8 +117,8 @@ class AddMessageState {
   rememberUser() {
     let userMobile = this.messageInfo.mobile;
     let exp = new Date();
-    let expiresTimeStamp = 60*1000*60;
-    exp.setTime(exp.getTime() + expiresTimeStamp*24);
+    let expiresTimeStamp = 60*1000*60*24;
+    exp.setTime(exp.getTime() + expiresTimeStamp*30);
     document.cookie = `userMobile=${this.messageInfo.mobile};path=/;expires=${exp.toGMTString()}`;
   }
 }

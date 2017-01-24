@@ -141,6 +141,7 @@ body {
 		}
 		.input-box.has-error::after{
 			content: attr(data-error);
+			font-size: 12px;
 			color: #f43;
 			position: absolute;
 			z-index: 2;
@@ -148,20 +149,32 @@ body {
 			right: .5em;
 		}
 
+		.caret.choice-tip {
+		    position: absolute;
+		    z-index: 4;
+		    right: 0.5em;
+		    top: 1em;
+		    display: block;
+		    border-color: transparent;
+		    border-width: .4em;
+		    border-style: solid;
+		    border-top-color: #666;
+		}
+
 		.brand-list{
 			position: absolute;
-			z-index: 1;
+			margin-top: 2.4em;
+			z-index: 3;
 			background-color: #fff;
 			list-style: none;
 			text-align: center;
-			width: 100%;
 			padding: 0;
 			border-left: 1px solid #ccc;
 			border-right: 1px solid #ccc;
 
 			li{
 				font-size: 14px;
-				padding: 6px 12px;
+				padding: 6px 3em;
 				width: 100%;
 				line-height: 1.42857;
 				border-bottom:1px solid #ccc;

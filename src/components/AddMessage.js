@@ -29,25 +29,29 @@ class AddMessage extends Component {
 					<div className="row">
 						<div className="col-xs-12">
 								<div className="input-group">
-								<div className="input-group-btn">
+								<span className="input-group-addon">车型选择</span>
+								{/*<div className="input-group-btn">
 									<button type="button" className="btn btn-default" onClick={this.toggleBrandListShow}>
 										车型选择
 									</button>
+								</div>*/}
+									<input id="brand" type="text" value={messageInfo.brand} className="form-control" onClick={this.toggleBrandListShow} readOnly/>
+									<span className="caret choice-tip" onClick={this.toggleBrandListShow}></span>
 									{isShowBrandList &&
 									<ul className="brand-list">
 										{brandList.map((brand, idx)=><li key={'brand_'+idx} onClick={()=>this.onBrandChange(brand)}>{brand}</li>)}
 									</ul>
-									 }
+									}
+
 								</div>
-									<input id="brand" type="text" value={messageInfo.brand} className="form-control" readOnly/>
-								</div>
+
 							</div>
 					</div>
 					<div className="row">
 						<div className="col-xs-12">
 							<div className="input-group input-box" data-error="不能为空">
 								<span className="input-group-addon">配件代码</span>
-								<input name="code" type="text" className="form-control"placeholder="请输入主机厂零件号" value={messageInfo.code}  onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
+								<input name="code" type="text" className="form-control"placeholder="输入主机厂零件号" value={messageInfo.code}  onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
 							</div>
 						</div>
 					</div>
@@ -56,6 +60,14 @@ class AddMessage extends Component {
 							<div className="input-group input-box" data-error="不能为空">
 							<span className="input-group-addon">配件名称</span>
 								<input name="desc" type="text" className="form-control" placeholder="请输入零件名" value={messageInfo.desc}  onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
+							</div>
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-xs-12">
+							<div className="input-group input-box" data-error="不能为空">
+							<span className="input-group-addon">厂家品牌</span>
+								<input name="manufacturer" key="goodCount" type="text" className="form-control" value={messageInfo.manufacturer} onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
 							</div>
 						</div>
 					</div>
@@ -75,14 +87,6 @@ class AddMessage extends Component {
 							</div>
 						</div>
 					</div>
-					<div className="row">
-						<div className="col-xs-12">
-							<div className="input-group input-box" data-error="不能为空">
-							<span className="input-group-addon">厂家品牌</span>
-								<input name="manufacturer" key="goodCount" type="text" className="form-control" value={messageInfo.manufacturer} onChange={this.onInputFieldChange} onBlur={this.onInputFieldBlur}/>
-							</div>
-						</div>
-					</div>
 					{isShowContentArea &&
 					<div className="row">
 						<div className="col-xs-12 input-box" data-error="至少输入5个字">
@@ -90,7 +94,6 @@ class AddMessage extends Component {
 						</div>
 					</div>
 					}
-
 					<div className="row">
 						{offTypeList.map((offType, idx)=>{
 							return (<div className="col-xs-4 offtype-item" key={'offtype_'+idx} onClick={()=>this.onOffTypeChange(offType)}>
