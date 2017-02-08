@@ -21,8 +21,11 @@ class App extends Component {
           <div className="panel-heading">{store.pageTitle}</div>
          <span className="btn btn-warning add-btn" onClick={ e =>store.toggleAddBox(e)}>发布</span>
         </nav>
+        {store.data.length == 0 && 
+          <h5 className="text-center">还没有人发布信息，点击右上角'发布'按钮发布</h5>
+        }
         <div className="messages-list-box" ref="messageBox" onTouchEnd={e=>this.onTouchEndHandle(e)} onWheel={e=>this.onMessagesBoxWheel(e)}>
-        <MessagesList setVisibleMessage={(id)=>this.onSetVisibleMessage(id)} messages={store.visibilityMessageList} userMobile={store.userMobile}/>
+        <MessagesList count={store.visibilityMessageList.length} setVisibleMessage={(id)=>this.onSetVisibleMessage(id)} messages={store.visibilityMessageList} userMobile={store.userMobile}/>
         {store.hasUnread && 
           <UnreadTips clickHandle={this.onRunToButtom}/>
         }

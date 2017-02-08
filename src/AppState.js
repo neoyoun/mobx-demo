@@ -47,22 +47,15 @@ class AppState {
   @action('initial load data')
   initialLoad() {
     let self = this;
-    let getDataReq = new Request(this.dataUrl,{method:'GET',mode:'cors', 'Accept': 'application/json', 'Content-Type': 'application/json'});
+    let getDataReq = new Request(self.dataUrl,{method:'GET',mode:'cors', 'Accept': 'application/json', 'Content-Type': 'application/json'});
     fetch(getDataReq)
     .then(res => res.json())
     .then(action(json => {
-      if(json.length > 0){
-        this.data = json.messages;
-        this.leastId = json.leastId;
-        this.userMobile = this.getMobileFromCookie();
-        if(json.length < this.loadCount){
-          this.hasHistoryMessage = false;
-        }
-        setTimeout(function () {
-          self.scrollMessageBox();
-        }, 100)
-      }else {
-        this.hasHistoryMessage= false;
+      this.data = json.messages;
+      this.leastId = json.leastId;
+      this.userMobile = this.getMobileFromCookie();
+      if(json.length<=0 || json.length < this.loadCount){
+        this.hasHistoryMessage = false;
       }
       this.loading = false;
       setTimeout(function () {
@@ -86,7 +79,7 @@ class AppState {
             self.scrollMessageBox();
           }, 100)
         }
-        self.leastId = newOne.id;
+        self.leastId = newOne.leastId;
         self.data.push(newOne);
         self.userMobile = self.getMobileFromCookie();
         self.listeningData();
@@ -220,13 +213,13 @@ class AppState {
     return curTop>=maxTop;
   }
   @computed get pageTitle() {
-    let pageTitle = '尾货处理信息';
+    let pageTitle = '配件处理信息';
     let brand = this.filterOption.brand;
     let offType = this.filterOption.offType;
     if(brand.length>0 && offType.length>0){
       pageTitle = `${brand}${offType}信息`
     }else if(brand.length>0 || offType.length>0){
-      pageTitle = (brand || offType) + '尾货信息';
+      pageTitle = (brand || offType) + '配件信息';
     }
     return pageTitle
   }
@@ -241,6 +234,9 @@ class AppState {
     this.runToBottom() 
   }
   @computed get visibilityMessageList() {
+    if(this.data.length == 0){
+      return []
+    }
     let filterResultList = [];
     let filter = this.filterOption
     if(!filter.brand && !filter.offType ){

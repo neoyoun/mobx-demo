@@ -12,7 +12,7 @@ wepackConfig = {
     './src/index'
   ],
   output: {
-    path: path.join(__dirname, 'dist2'),
+    path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',
     publicPath: '/static/'
   },

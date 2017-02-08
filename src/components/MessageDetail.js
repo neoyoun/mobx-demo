@@ -4,7 +4,7 @@ function MessageDetail({message}) {
   return (
     <div className="message-detail-box panel panel-default" onClick={(e)=>{if(e.target.id !== 'closeBtn'){e.stopPropagation()}} }>
         <div className="panel-heading">
-          <div className="panel-title text-center">详细信息 <span id="closeBtn" className="close-btn">&times;</span> </div>
+          <div className="panel-title text-center">详细信息<span id="closeBtn" className="close-btn">&times;</span> </div>
         </div>
         <div className="panel-body">
           <p>配件代码:{code}</p>

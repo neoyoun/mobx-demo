@@ -22,7 +22,7 @@ class MessagesList extends Component {
 class MessageItem extends Component {
   render() {
     let {source,message} = this.props;
-    let faceSrc = './imgs/'+ message.typename +'.png';
+    let faceSrc = './imgs/sale.png';
     return (
         <div className={"message-item "+ source}>
           <div className="item-face">
