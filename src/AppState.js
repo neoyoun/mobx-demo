@@ -188,11 +188,11 @@ class AppState {
     fetch(getEarlyReq)
     .then(res=>res.json())
     .then(json=>{
-      let newData = [...json.messages,...this.data];
+      //let newData = [...json.messages,...this.data];
       if(json.length < this.loadCount){
         this.hasHistoryMessage = false;
       }
-      this.data = newData;
+      this.data = json.messages.concat(this.data);
       this.scrollMessageBox();
       this.loading = false;
     })
