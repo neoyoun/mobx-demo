@@ -31,7 +31,7 @@ class App extends Component {
         }
         </div>
         <VisibilityTypeFilter setVisibleBrand={type=>store.setVisibleBrand(type)}  setVisibleOffType={type=>store.setVisibleOffType(type)} filterOption={store.filterOption} brandList={store.brandList} offTypeList={store.offTypeList} onToggleBrandFilter={this.onToggleBrandFilter} onToggleOffTypeFilter={this.onToggleOffTypeFilter}/>
-        {store.isShowMessageDetail && store.messageDetailShowing && <MessageDetail message={store.messageDetailShowing} />}
+        {store.isShowMessageDetail && <MessageDetail message={store.messageDetailShowing} />}
         <AddMessage addMessageStore={store.addMessageStore} isShow={store.isShowAddNewBox} brandList={store.brandList} offTypeList={store.offTypeList}/>
       </div>
     );

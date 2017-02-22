@@ -58,6 +58,7 @@ class AppState {
         this.hasHistoryMessage = false;
       }
       this.loading = false;
+      this.runToBottom();
       setTimeout(function () {
           self.listeningData()
         }, 500)
@@ -115,7 +116,7 @@ class AppState {
     this.isShowAddNewBox = !this.isShowAddNewBox;
     this.hidePopupLayer('addBox')
   }
-  @action ('hide modal')
+  @action ('hidePopupLayer')
   hidePopupLayer(box) {
     if(box != 'addBox' && this.isShowAddNewBox){
       this.isShowAddNewBox= false;
@@ -247,7 +248,7 @@ class AppState {
       }else{
         filterResultList = this.data
       }
-       if(filter.offType.length > 0){
+      if(filter.offType.length > 0){
         filterResultList = filterResultList.filter(item=>item.offType == filter.offType)
       }
       let filterBrand = this.data.filter
@@ -256,6 +257,7 @@ class AppState {
   }
   @action ('set visible message detail')
   setVisibleMessage(id) {
+   console.log('set visible id ',id)
     if(id != undefined){
       this.showingMessageId = id;
       this.isShowMessageDetail = true;

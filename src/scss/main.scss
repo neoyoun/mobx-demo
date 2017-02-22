@@ -12,7 +12,8 @@ html{
 body {
 	@extend %mobileSize;
 		height: 100%;
-		padding-top: 40px;
+		padding-top: 45px;
+		padding-bottom: 50px;
 		background-color: #f8f8f8;
 		background-image: url('../../imgs/list-bg.png');
 		background-size: 100% 100%;
@@ -34,6 +35,10 @@ body {
  	top: 0;
  	z-index: 1;
  	text-align: center;
+
+ 	.panel-heading {
+ 		font-size: 18px;
+ 	}
  }
  .fixed-bottom {
  	@extend %mobileSize;
@@ -193,7 +198,6 @@ body {
 	}
 	@at-root .messages-list-box {
 		@extend %overlay;
-		bottom:40px;
 		overflow: auto;
 		.messages-list {
 			position: relative;
@@ -232,6 +236,7 @@ body {
 	}
 	.message-detail-box {
 		@extend %popupmodal-bg;
+		font-size: 16px;
 
 		.close-btn {
 			position: absolute;
@@ -267,24 +272,28 @@ body {
 			.btn{
 				display: block;
 				width: 100%;
+				border-bottom-color: transparent;
+				border-left-color: transparent;
+				font-size: 18px;
+				line-height: 2
 			}
 		}
 		.filter-list{
 			position: absolute;
 			width: 100%;
 			top: 0;
+			font-size: 18px;
 			transform:translateY(-100%);
 			padding: 0;
 			margin:0;
 			list-style:none;
 			text-align: center;
-			background-color: #f5f5f5;
-			border-top: 1px solid #ccc;
+			background-color: #fff;
 			color: #333;
 
 			li{
 				padding: 6px 12px;
-				border-bottom: 1px solid #d8d8d8;
+				border-top: 1px solid #d8d8d8;
 				cursor: pointer;
 
 				&.select{
@@ -296,9 +305,11 @@ body {
 
 			&.brand{
 				left: 0;
+				border-right: 1px solid #d8d8d8;
 			}
 			&.offType{
 				right: 0;
+				border-left: 1px solid #d8d8d8;
 			}
 		}
 	}

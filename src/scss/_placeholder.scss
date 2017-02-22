@@ -13,8 +13,10 @@
 }
 %popupmodal-bg {
 	position:absolute;
-	width:80%;
-	left:10%;
 	top: 10%;
+	left: 50%;
+	transform: translateX(-50%);
+	width:80%;
+	min-width: 280px;
 	background-color: #fff;
 }
