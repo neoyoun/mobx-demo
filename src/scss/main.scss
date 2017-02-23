@@ -3,6 +3,10 @@ html{
 	height: 100%;
 	overflow: hidden;
 }
+input[type="text"]{
+	appearance: none;
+	-webkit-appearance: none;
+}
 %mobileSize {
 	width: 100%;
 	min-width: 320px;

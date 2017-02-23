@@ -21,9 +21,21 @@
 		    }
 		  }
 		  window.addEventListener('load',function () {
-		    var url = window.location.href;
-		    if(is_weixin && is_weixin() && !(/\?wxjump=/.test(url))){
-		      location.href = url+'?wxjump='+Math.random();
+		    var curUrl = window.location.href;
+		    var nextUrl = ''
+		    if(is_weixin()){
+		    	if( !(/\?wxjump=/.test(curUrl)) ) {
+		    		nextUrl = curUrl+'?wxjump='+Math.random().toString(32).slice(2,10);
+		    		curUrl = null;
+		    		location.href = nextUrl
+		    	}else {
+		    		var arr = curUrl.split('wxjump=');
+		    		var replaceStr = arr[1].slice(0,5);
+		    		nextUrl = curUrl.replace('wxjump='+replaceStr, 'wxjump='+Math.random().toString(32).slice(2,7))
+		    		curUrl = null;
+		    		location.href = nextUrl
+
+		    	}
 		    }
 		  });
     </script>
