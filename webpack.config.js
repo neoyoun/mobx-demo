@@ -2,7 +2,7 @@ let path = require('path');
 let srcPath = path.resolve(__dirname,'./src');
 let webpack = require('webpack');
 let BowerWebpackPlugin = require('bower-webpack-plugin');
-
+//let bootstrapLoader = require('bootstrap-loader')
 wepackConfig = {
   devtool: 'eval',
   entry: [
@@ -38,6 +38,10 @@ wepackConfig = {
       test: /\.jsx?$/,
       loaders: ['babel'],
       include: path.join(__dirname, 'src')
+    },
+    {
+      test: /\.css$/,
+      loaders: ['style','css'],
     },
     {
       test: /\.s(a|c)ss$/,

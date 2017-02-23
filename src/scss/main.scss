@@ -69,8 +69,10 @@ body {
 
 	.add-btn{
 		position: absolute;
-		top: 3px;
-		right: 3px;
+		right: 5px;
+		top: 50%;
+		transform: translateY(-50%);
+		font-size: 16px;
 		cursor: pointer;
 	}
 	%type-list {
@@ -105,7 +107,6 @@ body {
 	}
 	.new_message_box{
 		@extend %popupmodal-bg;
-		top:3rem;
 
 		@at-root .popup-modal {
 			position: fixed;

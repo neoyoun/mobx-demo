@@ -1,5 +1,6 @@
-import 'bootstrap-loader';
-import './scss/main.scss'
+//import 'bootstrap-loader';
+import './css/bootstrap.css';
+import './scss/main.scss';
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';

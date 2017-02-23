@@ -24,8 +24,8 @@ module.exports = {
 			},
 			{
 				test: /\.s(a|c)ss$/,
-				loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
-				//loader: ExtractTextPlugin.extract('style','css','sass?outputStyle=expanded')
+				//loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
+				loader: ExtractTextPlugin.extract('style',['css','sass?outputStyle=expanded'])
 			},
 			{
 				test: /\.(png|jpg|gif|)$/,
