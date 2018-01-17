@@ -70,7 +70,6 @@ class App extends Component {
     e.stopPropagation()
     this.props.store.toggleOffTypeFilter();
   }
-
 };
 
 export default App;

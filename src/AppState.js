@@ -22,14 +22,18 @@ class AppState {
     isShowBrandFilter:false,
     isShowOffTypeFilter:false
   }
-  addMessageStore = addMessageStore;
-  loadCount = 20;
-  offTypeList = ['全新件','库存件','拆车件'];
-  brandList = ['海格客车','宇通客车','金龙客车','申龙客车','金旅客车','福田客车','安凯客车','中通客车'];
-  dataUrl = `${ORIGINURL}services/loaddata.php?amount=${this.loadCount}`;
-  historyDataUrl = `${this.dataUrl}&startIndex=`;
-  listeningUrl = `${ORIGINURL}services/loaddata.php?leastId=`;
-  
+
+  constructor() {
+    this.addMessageStore = addMessageStore;
+    this.loadCount = 20;
+    this.offTypeList = ['全新件','库存件','拆车件'];
+    this.brandList = ['海格客车','宇通客车','金龙客车','申龙客车','金旅客车','福田客车','安凯客车','中通客车'];
+    
+    this.dataUrl = `${ORIGINURL}services/loaddata.php?amount=${this.loadCount}`;
+
+    this.historyDataUrl = `${this.dataUrl}&startIndex=`;
+    this.listeningUrl = `${ORIGINURL}services/loaddata.php?leastId=`;
+  }
   
   @action('get user from cookie')
   getMobileFromCookie() {
@@ -46,6 +50,7 @@ class AppState {
   }
   @action('initial load data')
   initialLoad() {
+    console.log('environment', process.env.NODE_ENV)
     let self = this;
     let getDataReq = new Request(self.dataUrl,{method:'GET',mode:'cors', 'Accept': 'application/json', 'Content-Type': 'application/json'});
     fetch(getDataReq)

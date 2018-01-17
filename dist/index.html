@@ -28,14 +28,13 @@
 		    		nextUrl = curUrl+'?wxjump='+Math.random().toString(32).slice(2,10);
 		    		curUrl = null;
 		    		location.href = nextUrl
-		    	}else {
+		    	}/*else {
 		    		var arr = curUrl.split('wxjump=');
 		    		var replaceStr = arr[1].slice(0,5);
 		    		nextUrl = curUrl.replace('wxjump='+replaceStr, 'wxjump='+Math.random().toString(32).slice(2,7))
 		    		curUrl = null;
 		    		location.href = nextUrl
-
-		    	}
+		    	}*/
 		    }
 		  });
     </script>
